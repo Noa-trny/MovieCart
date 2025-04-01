@@ -167,11 +167,11 @@
                     <ul class="space-y-2">
                         <li class="flex items-start">
                             <i class="fas fa-map-marker-alt mt-1 mr-2"></i>
-                            <span>123 Movie Street, Hollywood, CA 90210</span>
+                            <span>65 Pl. Rihour, 59800 Lille</span>
                         </li>
                         <li class="flex items-center">
                             <i class="fas fa-phone mr-2"></i>
-                            <span>+1 (555) 123-4567</span>
+                            <span>+33 03 74 09 19 85</span>
                         </li>
                         <li class="flex items-center">
                             <i class="fas fa-envelope mr-2"></i>
