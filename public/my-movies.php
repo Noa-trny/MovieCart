@@ -24,17 +24,17 @@ ob_start();
 ?>
 
 <div class="mb-8">
-    <h1 class="text-3xl font-bold mb-2">Ma Collection de Films</h1>
-    <p class="text-gray-600">Tous les films que vous avez achetés</p>
+    <h1 class="text-3xl font-bold mb-2">My movie collection</h1>
+    <p class="text-gray-600">All the movies you have purchased</p>
 </div>
 
 <?php if (empty($movies)): ?>
     <div class="bg-white p-8 rounded-lg shadow-md text-center">
         <i class="fas fa-film text-gray-300 text-5xl mb-4"></i>
-        <h2 class="text-2xl font-semibold mb-2">Aucun film dans votre collection</h2>
-        <p class="text-gray-600 mb-6">Vous n'avez pas encore acheté de films.</p>
+        <h2 class="text-2xl font-semibold mb-2">No movies in your collection</h2>
+        <p class="text-gray-600 mb-6">You haven't purchased any movies yet.</p>
         <a href="<?= SITE_URL ?>" class="inline-block bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 rounded-lg font-semibold">
-            Parcourir les Films
+        Browse Movies
         </a>
     </div>
 <?php else: ?>
@@ -53,18 +53,18 @@ ob_start();
                         </a>
                     </h3>
                     <p class="text-gray-600 mb-2">
-                        Réalisé par <?= sanitizeOutput($movie['director_name']) ?>
+                        Directed by <?= sanitizeOutput($movie['director_name']) ?>
                     </p>
                     <p class="text-gray-600 mb-2">
                         <?= $movie['release_year'] ?> • <?= $movie['duration'] ?> min
                     </p>
                     <p class="text-gray-600">
-                        Catégorie: <?= sanitizeOutput($movie['category_name']) ?>
+                        Categorie: <?= sanitizeOutput($movie['category_name']) ?>
                     </p>
                     
                     <a href="<?= SITE_URL ?>/movie.php?id=<?= $movie['id'] ?>" 
                        class="mt-4 block w-full bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg text-center">
-                        <i class="fas fa-info-circle mr-2"></i> Détails
+                        <i class="fas fa-info-circle mr-2"></i> Details
                     </a>
                 </div>
             </div>
