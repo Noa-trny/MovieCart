@@ -70,6 +70,9 @@
                     </div>
                     
                     <?php if (isLoggedIn()): ?>
+                        <a href="<?= SITE_URL ?>/my-movies.php" class="text-gray-600 hover:text-blue-600">
+                            <i class="fas fa-film mr-1"></i> My collection
+                        </a>
                         <a href="<?= SITE_URL ?>/cart.php" class="text-gray-600 hover:text-blue-600 relative">
                             <i class="fas fa-shopping-cart"></i>
                             <?php if (isset($_SESSION[CART_SESSION_KEY]) && count($_SESSION[CART_SESSION_KEY]) > 0): ?>
