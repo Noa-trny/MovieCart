@@ -123,12 +123,10 @@ function getFeaturedMovies($limit = 6) {
     $movies = [];
     $categoriesExist = tableExists('categories');
     
-    // Vérifier si le champ 'featured' existe dans la table movies
     $checkFieldQuery = "SHOW COLUMNS FROM movies LIKE 'featured'";
     $fieldExists = $conn->query($checkFieldQuery);
     
     if ($fieldExists && $fieldExists->num_rows > 0) {
-        // Le champ existe, on peut l'utiliser dans la requête
         $sql = "SELECT m.*, d.name as director_name";
         
         if ($categoriesExist) {
@@ -153,7 +151,6 @@ function getFeaturedMovies($limit = 6) {
             }
         }
     } else {
-        // Le champ n'existe pas, on récupère simplement les films les plus récents
         $sql = "SELECT m.*, d.name as director_name";
         
         if ($categoriesExist) {
@@ -177,8 +174,7 @@ function getFeaturedMovies($limit = 6) {
                 $movies[] = $row;
             }
         }
-        
-        // Afficher un avertissement pour l'administrateur
+
         if (isAdmin()) {
             setFlashMessage("Le champ 'featured' n'existe pas dans la table 'movies'. Veuillez mettre à jour votre base de données.", 'warning');
         }
@@ -483,7 +479,6 @@ function getUserPurchases($userId) {
         
         $stmt->close();
     } catch (Exception $e) {
-        // Log l'erreur mais on retourne simplement un tableau vide
         error_log("Erreur lors de la récupération des achats: " . $e->getMessage());
     }
     

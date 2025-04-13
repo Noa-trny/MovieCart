@@ -13,13 +13,10 @@ if (!isLoggedIn()) {
     redirectTo(SITE_URL . '/login.php?redirect=' . urlencode(SITE_URL . '/cart.php'));
 }
 
-// Récupérer les articles du panier
 $cartItems = getCartItems();
 $total = 0;
 
-// Traitement du formulaire
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Action: Supprimer un article
     if (isset($_POST['remove_item'])) {
         $movieId = (int)$_POST['movie_id'];
         
@@ -30,17 +27,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     
-    // Action: Vider le panier
     if (isset($_POST['clear_cart'])) {
         $_SESSION[CART_SESSION_KEY] = [];
         setFlashMessage("Votre panier a été vidé.", "success");
         redirectTo(SITE_URL . '/cart.php');
     }
     
-    // Action: Passer à la caisse
     if (isset($_POST['checkout'])) {
-        // Ici, vous implémenteriez la logique pour passer à la caisse
-        // Pour l'instant, nous allons simplement rediriger vers une page factice
+        # logique d'achat 
         setFlashMessage("Cette fonctionnalité n'est pas encore disponible.", "error");
         redirectTo(SITE_URL . '/cart.php');
     }
