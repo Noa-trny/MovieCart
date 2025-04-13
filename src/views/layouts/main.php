@@ -1,3 +1,21 @@
+<?php
+function renderSearchForm() {
+    return '
+    <form action="' . SITE_URL . '/search.php" method="GET">
+        <div class="relative">
+            <input 
+                type="text" 
+                name="q" 
+                placeholder="Search movies..." 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+            <button type="submit" class="absolute right-2 top-2 text-gray-400 hover:text-blue-500">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </form>';
+}
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -37,19 +55,7 @@
                 
                 <!-- Search Form -->
                 <div class="hidden md:block w-1/3">
-                    <form action="<?= SITE_URL ?>/search.php" method="GET">
-                        <div class="relative">
-                            <input 
-                                type="text" 
-                                name="q" 
-                                placeholder="Search movies..." 
-                                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            >
-                            <button type="submit" class="absolute right-2 top-2 text-gray-400 hover:text-blue-500">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                    </form>
+                    <?= renderSearchForm() ?>
                 </div>
                 
                 <!-- Navigation -->
@@ -108,19 +114,7 @@
     <!-- Mobile Search (visible on mobile only) -->
     <div class="block md:hidden bg-gray-100 py-2">
         <div class="container mx-auto">
-            <form action="<?= SITE_URL ?>/search.php" method="GET">
-                <div class="relative">
-                    <input 
-                        type="text" 
-                        name="q" 
-                        placeholder="Search movies..." 
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    >
-                    <button type="submit" class="absolute right-2 top-2 text-gray-400 hover:text-blue-500">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
-            </form>
+            <?= renderSearchForm() ?>
         </div>
     </div>
     
