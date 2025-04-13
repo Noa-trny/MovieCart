@@ -1,13 +1,26 @@
-RewriteEngine On
-RewriteBase /MovieCart/public/
-
-# Prevent directory listing
 Options -Indexes
 
-# Handle front controller pattern
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteRule ^ index.php [QSA,L]
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /MovieCart/public/
+
+    # Rediriger vers pages/index.php si l'URL pointe directement vers public/
+    RewriteRule ^$ pages/index.php [L]
+
+    # Ne pas appliquer les règles sur les fichiers et dossiers existants
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+
+    # Pour les pages dans le dossier public mais pas dans public/pages
+    RewriteRule ^([^/]+)\.php$ pages/$1.php [L]
+
+    # Pour les catégories
+    RewriteRule ^categories/([^/]+)\.php$ pages/categories/$1.php [L]
+</IfModule>
+
+# Gestion des erreurs
+ErrorDocument 404 /MovieCart/public/pages/404.php
+ErrorDocument 500 /MovieCart/public/pages/500.php
 
 # Security headers
 <IfModule mod_headers.c>

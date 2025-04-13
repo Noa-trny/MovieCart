@@ -1,0 +1,166 @@
+/* CSS spécifique à la page détail d'un film */
+
+.movie-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    color: #3b82f6;
+    margin-bottom: 20px;
+    font-weight: 500;
+    transition: color 0.3s;
+}
+
+.back-link i {
+    margin-right: 5px;
+}
+
+.back-link:hover {
+    color: #2563eb;
+}
+
+.movie-detail-card {
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
+
+.movie-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.movie-poster-section {
+    background: linear-gradient(to right, #1e3a8a, #3b82f6);
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.movie-poster-img {
+    max-height: 400px;
+    width: auto;
+    object-fit: contain;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.movie-info-section {
+    padding: 25px;
+}
+
+.movie-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #1f2937;
+}
+
+.movie-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.movie-meta-item {
+    display: inline-flex;
+    align-items: center;
+    background-color: #f3f4f6;
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.movie-meta-item.category {
+    background-color: #3b82f6;
+    color: white;
+}
+
+.movie-meta-item i {
+    margin-right: 5px;
+    font-size: 0.8rem;
+}
+
+.movie-director {
+    margin-bottom: 20px;
+}
+
+.movie-director-title {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+
+.director-link {
+    color: #3b82f6;
+    transition: color 0.3s;
+}
+
+.director-link:hover {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+.movie-description {
+    margin-bottom: 30px;
+}
+
+.movie-description-title {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.movie-description-content {
+    line-height: 1.6;
+    color: #4b5563;
+}
+
+.movie-action-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+}
+
+.movie-price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #3b82f6;
+}
+
+/* Bouton d'achat avec animation */
+.btn-add-to-cart {
+    transition: transform 0.2s;
+}
+
+.btn-add-to-cart:hover {
+    transform: scale(1.05);
+}
+
+.btn-add-to-cart i {
+    margin-right: 5px;
+}
+
+/* Style pour les écrans moyens et grands */
+@media (min-width: 768px) {
+    .movie-details {
+        flex-direction: row;
+    }
+    
+    .movie-poster-section {
+        width: 40%;
+        padding: 30px;
+    }
+    
+    .movie-info-section {
+        width: 60%;
+    }
+} 

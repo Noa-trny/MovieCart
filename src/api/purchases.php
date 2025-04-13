@@ -2,17 +2,14 @@
 require_once __DIR__ . '/../../src/config/config.php';
 require_once __DIR__ . '/../../src/config/database.php';
 
-// Assurer que la réponse est en JSON
 header('Content-Type: application/json');
 
-// Fonction pour envoyer une réponse d'erreur
 function sendError($message, $code = 400) {
     http_response_code($code);
     echo json_encode(['error' => $message]);
     exit;
 }
 
-// Vérifier l'authentification (sauf pour certaines actions publiques)
 $action = $_GET['action'] ?? '';
 $publicActions = ['get_movie_price'];
 
@@ -20,10 +17,8 @@ if (!in_array($action, $publicActions) && !isLoggedIn()) {
     sendError('Authentification requise', 401);
 }
 
-// Récupérer l'ID utilisateur si connecté
 $userId = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 
-// Traiter l'action demandée
 switch ($action) {
     case 'get_purchases':
         try {
@@ -35,7 +30,6 @@ switch ($action) {
                 [$userId]
             );
             
-            // Ajouter les films pour chaque commande
             foreach ($orders as &$order) {
                 $order['items'] = fetchAll(
                     "SELECT oi.movie_id, m.title, oi.price, m.poster_path 
@@ -84,12 +78,10 @@ switch ($action) {
         break;
         
     case 'add_to_cart':
-        // Vérifier si la méthode est POST
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             sendError('Méthode non autorisée', 405);
         }
         
-        // Vérifier le token CSRF
         if (!isset($_POST['csrf_token']) || !validateCSRFToken($_POST['csrf_token'])) {
             sendError('Token CSRF invalide', 403);
         }
@@ -99,18 +91,15 @@ switch ($action) {
             sendError('ID de film invalide');
         }
         
-        // Initialiser le panier si nécessaire
         if (!isset($_SESSION[CART_SESSION_KEY])) {
             $_SESSION[CART_SESSION_KEY] = [];
         }
         
-        // Vérifier si le film existe
         $movie = fetchOne("SELECT id, title FROM movies WHERE id = ?", [$movieId]);
         if (!$movie) {
             sendError('Film non trouvé', 404);
         }
         
-        // Ajouter au panier
         $_SESSION[CART_SESSION_KEY][] = $movieId;
         
         echo json_encode([
@@ -120,12 +109,10 @@ switch ($action) {
         break;
         
     case 'remove_from_cart':
-        // Vérifier si la méthode est POST
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             sendError('Méthode non autorisée', 405);
         }
         
-        // Vérifier le token CSRF
         if (!isset($_POST['csrf_token']) || !validateCSRFToken($_POST['csrf_token'])) {
             sendError('Token CSRF invalide', 403);
         }
@@ -135,16 +122,14 @@ switch ($action) {
             sendError('ID de film invalide');
         }
         
-        // Vérifier si le panier existe
         if (!isset($_SESSION[CART_SESSION_KEY])) {
             $_SESSION[CART_SESSION_KEY] = [];
         }
         
-        // Chercher et supprimer du panier
         $key = array_search($movieId, $_SESSION[CART_SESSION_KEY]);
         if ($key !== false) {
             unset($_SESSION[CART_SESSION_KEY][$key]);
-            $_SESSION[CART_SESSION_KEY] = array_values($_SESSION[CART_SESSION_KEY]); // Réindexer
+            $_SESSION[CART_SESSION_KEY] = array_values($_SESSION[CART_SESSION_KEY]);
         }
         
         echo json_encode([
@@ -154,26 +139,21 @@ switch ($action) {
         break;
         
     case 'checkout':
-        // Vérifier si la méthode est POST
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             sendError('Méthode non autorisée', 405);
         }
         
-        // Vérifier le token CSRF
         if (!isset($_POST['csrf_token']) || !validateCSRFToken($_POST['csrf_token'])) {
             sendError('Token CSRF invalide', 403);
         }
         
-        // Vérifier si le panier existe et n'est pas vide
         if (!isset($_SESSION[CART_SESSION_KEY]) || empty($_SESSION[CART_SESSION_KEY])) {
             sendError('Le panier est vide', 400);
         }
         
         try {
-            // Commencer la transaction
             beginTransaction();
             
-            // Calculer le montant total
             $total = 0;
             $cartItems = [];
             
@@ -185,13 +165,11 @@ switch ($action) {
                 }
             }
             
-            // Créer la commande
             $orderId = insert(
                 "INSERT INTO orders (user_id, total_amount, status) VALUES (?, ?, 'completed')",
                 [$userId, $total]
             );
             
-            // Ajouter les films à la commande
             foreach ($cartItems as $item) {
                 insert(
                     "INSERT INTO order_items (order_id, movie_id, price) VALUES (?, ?, ?)",
@@ -199,10 +177,8 @@ switch ($action) {
                 );
             }
             
-            // Valider la transaction
             commitTransaction();
             
-            // Vider le panier
             $_SESSION[CART_SESSION_KEY] = [];
             
             echo json_encode([
@@ -211,7 +187,6 @@ switch ($action) {
                 'total_amount' => $total
             ]);
         } catch (Exception $e) {
-            // Annuler la transaction en cas d'erreur
             rollbackTransaction();
             sendError('Erreur lors du paiement: ' . $e->getMessage(), 500);
         }

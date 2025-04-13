@@ -2,10 +2,8 @@
 require_once __DIR__ . '/../../src/config/config.php';
 require_once __DIR__ . '/../../src/config/database.php';
 
-// Assurer que la réponse est en JSON
 header('Content-Type: application/json');
 
-// Fonction pour envoyer une réponse d'erreur
 function sendError($message, $code = 400) {
     http_response_code($code);
     echo json_encode(['error' => $message]);
@@ -14,24 +12,20 @@ function sendError($message, $code = 400) {
 
 $action = $_GET['action'] ?? '';
 
-// Traiter l'action demandée
+
 switch ($action) {
     case 'login':
-        // Vérifier si la méthode est POST
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             sendError('Méthode non autorisée', 405);
         }
         
-        // Récupérer les données JSON du corps de la requête
         $jsonData = file_get_contents('php://input');
         $data = json_decode($jsonData, true);
         
         if (!$data) {
-            // Essayer de récupérer les données depuis $_POST
             $data = $_POST;
         }
         
-        // Valider les entrées
         $email = filter_var($data['email'] ?? '', FILTER_VALIDATE_EMAIL);
         $password = $data['password'] ?? '';
         
@@ -39,7 +33,6 @@ switch ($action) {
             sendError('Email et mot de passe requis');
         }
         
-        // Vérifier les identifiants
         $pdo = getDbConnection();
         $stmt = $pdo->prepare("SELECT id, email, password, first_name, last_name FROM users WHERE email = ?");
         $stmt->execute([$email]);
@@ -49,12 +42,10 @@ switch ($action) {
             sendError('Identifiants incorrects', 401);
         }
         
-        // Créer la session
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['user_email'] = $user['email'];
         $_SESSION['user_name'] = $user['first_name'] . ' ' . $user['last_name'];
         
-        // Générer un nouveau token CSRF
         generateCSRFToken();
         
         echo json_encode([
@@ -69,21 +60,17 @@ switch ($action) {
         break;
         
     case 'register':
-        // Vérifier si la méthode est POST
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             sendError('Méthode non autorisée', 405);
         }
         
-        // Récupérer les données JSON du corps de la requête
         $jsonData = file_get_contents('php://input');
         $data = json_decode($jsonData, true);
         
         if (!$data) {
-            // Essayer de récupérer les données depuis $_POST
             $data = $_POST;
         }
         
-        // Valider les entrées
         $email = filter_var($data['email'] ?? '', FILTER_VALIDATE_EMAIL);
         $password = $data['password'] ?? '';
         $firstName = trim($data['first_name'] ?? '');
@@ -97,7 +84,6 @@ switch ($action) {
             sendError('Le mot de passe doit contenir au moins 8 caractères');
         }
         
-        // Vérifier si l'email existe déjà
         $pdo = getDbConnection();
         $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
         $stmt->execute([$email]);
@@ -106,7 +92,6 @@ switch ($action) {
             sendError('Cet email est déjà utilisé');
         }
         
-        // Créer l'utilisateur
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         
         try {
@@ -118,12 +103,10 @@ switch ($action) {
             
             $userId = $pdo->lastInsertId();
             
-            // Créer la session
             $_SESSION['user_id'] = $userId;
             $_SESSION['user_email'] = $email;
             $_SESSION['user_name'] = $firstName . ' ' . $lastName;
             
-            // Générer un nouveau token CSRF
             generateCSRFToken();
             
             echo json_encode([
@@ -141,21 +124,18 @@ switch ($action) {
         break;
         
     case 'logout':
-        // Détruire la session
         session_destroy();
         
         echo json_encode(['success' => true]);
         break;
         
     case 'get_profile':
-        // Vérifier l'authentification
         if (!isLoggedIn()) {
             sendError('Authentification requise', 401);
         }
         
         $userId = $_SESSION['user_id'];
         
-        // Récupérer les informations de l'utilisateur
         $pdo = getDbConnection();
         $stmt = $pdo->prepare("
             SELECT id, email, first_name, last_name, created_at 
@@ -169,29 +149,24 @@ switch ($action) {
             sendError('Utilisateur non trouvé', 404);
         }
         
-        // Masquer les informations sensibles
         unset($user['password']);
         
         echo json_encode(['user' => $user]);
         break;
         
     case 'update_password':
-        // Vérifier l'authentification
         if (!isLoggedIn()) {
             sendError('Authentification requise', 401);
         }
         
-        // Vérifier si la méthode est POST
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             sendError('Méthode non autorisée', 405);
         }
         
-        // Vérifier le token CSRF
         $jsonData = file_get_contents('php://input');
         $data = json_decode($jsonData, true);
         
         if (!$data) {
-            // Essayer de récupérer les données depuis $_POST
             $data = $_POST;
         }
         
@@ -211,7 +186,6 @@ switch ($action) {
             sendError('Le nouveau mot de passe doit contenir au moins 8 caractères');
         }
         
-        // Vérifier le mot de passe actuel
         $pdo = getDbConnection();
         $stmt = $pdo->prepare("SELECT password FROM users WHERE id = ?");
         $stmt->execute([$userId]);
@@ -221,7 +195,6 @@ switch ($action) {
             sendError('Mot de passe actuel incorrect');
         }
         
-        // Mettre à jour le mot de passe
         $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
         
         try {

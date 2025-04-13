@@ -1,13 +1,10 @@
 <?php
-// Start session if not already started
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-// Load WampServer configuration
 require_once __DIR__ . '/wamp.php';
 
-// Helper functions
 function redirect($path) {
     header('Location: ' . SITE_URL . $path);
     exit;

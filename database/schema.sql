@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS movies (
     poster_path VARCHAR(255),
     director_id INT,
     category_id INT,
+    featured BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (director_id) REFERENCES directors(id) ON DELETE SET NULL,
@@ -77,6 +78,16 @@ CREATE TABLE IF NOT EXISTS order_items (
     FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS purchases (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    movie_id INT NOT NULL,
+    purchase_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    price DECIMAL(10,2) NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (movie_id) REFERENCES movies(id) ON DELETE CASCADE
+);
+
 INSERT INTO categories (name, slug, description) VALUES
 ('Action', 'action', 'Action-packed movies with thrilling sequences'),
 ('Drama', 'drama', 'Emotional and character-driven stories'),
@@ -94,10 +105,10 @@ INSERT INTO actors (name, biography) VALUES
 ('Tom Cruise', 'American actor and producer known for his work in action films'),
 ('Meryl Streep', 'American actress known for her versatility and numerous awards');
 
-INSERT INTO movies (title, description, release_year, duration, price, director_id, category_id) VALUES
-('Inception', 'A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.', 2010, 148, 19.99, 1, 1),
-('The Departed', 'An undercover cop and a mole in the police attempt to identify each other while infiltrating an Irish gang in South Boston.', 2006, 151, 14.99, 2, 2),
-('E.T. the Extra-Terrestrial', 'A troubled child summons the courage to help a friendly alien escape Earth and return to his home world.', 1982, 115, 12.99, 3, 4);
+INSERT INTO movies (title, description, release_year, duration, price, director_id, category_id, featured) VALUES
+('Inception', 'A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.', 2010, 148, 19.99, 1, 1, TRUE),
+('The Departed', 'An undercover cop and a mole in the police attempt to identify each other while infiltrating an Irish gang in South Boston.', 2006, 151, 14.99, 2, 2, TRUE),
+('E.T. the Extra-Terrestrial', 'A troubled child summons the courage to help a friendly alien escape Earth and return to his home world.', 1982, 115, 12.99, 3, 4, TRUE);
 
 INSERT INTO movie_actors (movie_id, actor_id, role) VALUES
 (1, 1, 'Cobb'),
