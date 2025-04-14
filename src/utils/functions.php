@@ -1,12 +1,8 @@
 <?php
 require_once __DIR__ . '/../../config/config.php';
 
-function isLoggedIn() {
-    return isset($_SESSION['user_id']);
-}
-
 function redirectTo($url) {
-    header("Location: $url");
+    header("Location: " . SITE_URL . $url);
     exit;
 }
 
@@ -244,33 +240,11 @@ function searchMovies($query) {
 }
 
 function isUserAuthenticated() {
-    return isset($_SESSION['user_id']) && !empty($_SESSION['user_id']);
+    return isLoggedIn();
 }
 
 function isAdmin() {
-    if (!isUserAuthenticated()) {
-        return false;
-    }
-    
-    $conn = connectDB();
-    $userId = $_SESSION['user_id'];
-    
-    $stmt = $conn->prepare("SELECT is_admin FROM users WHERE id = ?");
-    $stmt->bind_param("i", $userId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    if ($result->num_rows > 0) {
-        $user = $result->fetch_assoc();
-        $isAdmin = (bool)$user['is_admin'];
-    } else {
-        $isAdmin = false;
-    }
-    
-    $stmt->close();
-    $conn->close();
-    
-    return $isAdmin;
+    return false; // Temporairement désactivé jusqu'à l'implémentation de la gestion des administrateurs
 }
 
 function getCart() {
@@ -484,5 +458,111 @@ function getUserPurchases($userId) {
     
     $conn->close();
     return $movies;
+}
+
+function loginUser($email, $password) {
+    if (empty($email) || empty($password)) {
+        return ['success' => false, 'message' => 'Email et mot de passe requis'];
+    }
+    
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return ['success' => false, 'message' => 'Format d\'email invalide'];
+    }
+    
+    $conn = connectDB();
+    $email = sanitizeInput($email);
+    
+    $stmt = $conn->prepare("SELECT id, email, password FROM users WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows === 0) {
+        $stmt->close();
+        $conn->close();
+        return ['success' => false, 'message' => 'Email ou mot de passe incorrect'];
+    }
+    
+    $user = $result->fetch_assoc();
+    $stmt->close();
+    $conn->close();
+    
+    if (password_verify($password, $user['password'])) {
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['user_email'] = $user['email'];
+        $_SESSION['last_activity'] = time();
+        
+        return [
+            'success' => true, 
+            'message' => 'Connexion réussie', 
+            'user_id' => $user['id']
+        ];
+    } else {
+        return ['success' => false, 'message' => 'Email ou mot de passe incorrect'];
+    }
+}
+
+function registerUser($email, $password, $confirmPassword) {
+    if (empty($email) || empty($password) || empty($confirmPassword)) {
+        return ['success' => false, 'message' => 'Tous les champs sont requis'];
+    }
+    
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return ['success' => false, 'message' => 'Format d\'email invalide'];
+    }
+    
+    if ($password !== $confirmPassword) {
+        return ['success' => false, 'message' => 'Les mots de passe ne correspondent pas'];
+    }
+    
+    if (strlen($password) < 8) {
+        return ['success' => false, 'message' => 'Le mot de passe doit contenir au moins 8 caractères'];
+    }
+    
+    $conn = connectDB();
+    $email = sanitizeInput($email);
+    
+    $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows > 0) {
+        $stmt->close();
+        $conn->close();
+        return ['success' => false, 'message' => 'Cet email est déjà utilisé'];
+    }
+    
+    $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+    
+    $stmt = $conn->prepare("INSERT INTO users (email, password, created_at) VALUES (?, ?, NOW())");
+    $stmt->bind_param("ss", $email, $hashedPassword);
+    
+    if ($stmt->execute()) {
+        $userId = $conn->insert_id;
+        $stmt->close();
+        $conn->close();
+        
+        $_SESSION['user_id'] = $userId;
+        $_SESSION['user_email'] = $email;
+        $_SESSION['last_activity'] = time();
+        
+        return ['success' => true, 'message' => 'Inscription réussie', 'user_id' => $userId];
+    }
+    
+    $stmt->close();
+    $conn->close();
+    return ['success' => false, 'message' => 'Erreur lors de l\'inscription'];
+}
+
+function getFlashMessage() {
+    if (isset($_SESSION['flash_message'])) {
+        $message = $_SESSION['flash_message'];
+        $type = $_SESSION['flash_type'];
+        unset($_SESSION['flash_message']);
+        unset($_SESSION['flash_type']);
+        return ['message' => $message, 'type' => $type];
+    }
+    return null;
 }
 ?> 

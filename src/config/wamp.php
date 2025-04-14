@@ -4,7 +4,7 @@ define('DB_NAME', 'moviecart');
 define('DB_USER', 'root');
 define('DB_PASS', '');
 
-define('SITE_URL', 'http://localhost/MovieCart/public');
+define('SITE_URL', 'http://localhost/MovieCart/public/pages');
 define('SITE_NAME', 'MovieCart');
 
 define('UPLOAD_PATH', __DIR__ . '/../../public/uploads');
