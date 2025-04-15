@@ -15,7 +15,7 @@ Options -Indexes
     RewriteRule ^([^/]+)\.php$ pages/$1.php [L]
 
     # Pour les catégories
-    RewriteRule ^categories/([^/]+)\.php$ pages/categories/$1.php [L]
+    RewriteRule ^categories/([^/]+)\.php$ categories/$1.php [L]
 </IfModule>
 
 # Gestion des erreurs

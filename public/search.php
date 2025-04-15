@@ -55,7 +55,7 @@ ob_start();
             <?php foreach ($movies as $movie): ?>
                 <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
                     <div class="relative">
-                        <img src="<?= $movie['image_url'] ?>" alt="<?= htmlspecialchars($movie['title']) ?>" class="w-full h-64 object-cover">
+                        <img src="<?= $movie['poster_path'] ?>" alt="<?= htmlspecialchars($movie['title']) ?>" class="w-full h-64 object-cover">
                         <div class="absolute top-2 right-2 bg-blue-600 text-white text-xs px-2 py-1 rounded">
                             <?= htmlspecialchars($movie['category']) ?>
                         </div>

@@ -115,14 +115,14 @@ ob_start();
     <h2 class="section-title">Explorez par catégorie</h2>
     
     <div class="category-grid">
-        <a href="<?= SITE_URL ?>/../categories/action.php" class="category-card">
+        <a href="<?= SITE_URL ?>/categories/action.php" class="category-card">
             <div class="category-icon category-action">
                 <i class="fas fa-fire"></i>
             </div>
             <div class="category-name">Action</div>
         </a>
         
-        <a href="<?= SITE_URL ?>/../categories/drama.php" class="category-card">
+        <a href="<?= SITE_URL ?>/categories/drama.php" class="category-card">
             <div class="category-icon category-drama">
                 <i class="fas fa-theater-masks"></i>
             </div>

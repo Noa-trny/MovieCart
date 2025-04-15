@@ -181,13 +181,32 @@ function getFeaturedMovies($limit = 6) {
 }
 
 function getMoviesByCategory($category, $limit = 10) {
-    $sql = "SELECT * FROM movies WHERE category = ? LIMIT ?";
+    $categoriesExist = tableExists('categories');
+    
+    $sql = "SELECT m.*, d.name as director_name";
+    
+    if ($categoriesExist) {
+        $sql .= ", c.name as category_name";
+    }
+    
+    $sql .= " FROM movies m 
+              LEFT JOIN directors d ON m.director_id = d.id";
+    
+    if ($categoriesExist) {
+        $sql .= " LEFT JOIN categories c ON m.category_id = c.id 
+                  WHERE c.name = ?";
+    } else {
+        $sql .= " WHERE m.category = ?";
+    }
+    
+    $sql .= " LIMIT ?";
+    
     $result = executeQuery($sql, "si", [$category, $limit]);
     
     $movies = [];
     if ($result) {
         while ($row = $result->fetch_assoc()) {
-            $movies[] = $row;
+            $movies[] = formatMovieData($row);
         }
     }
     
@@ -564,5 +583,12 @@ function getFlashMessage() {
         return ['message' => $message, 'type' => $type];
     }
     return null;
+}
+
+function formatMovieData($movie) {
+    if (empty($movie['poster_path'])) {
+        $movie['poster_path'] = ASSETS_URL . '/images/movie-placeholder.jpg';
+    }
+    return $movie;
 }
 ?> 

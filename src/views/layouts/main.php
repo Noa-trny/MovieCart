@@ -13,7 +13,11 @@ require_once __DIR__ . '/../../utils/functions.php';
     <link rel="stylesheet" href="<?= ASSETS_URL ?>/css/common.css">
     <?php
     $currentPage = basename($_SERVER['PHP_SELF'], '.php');
-    if (defined('PUBLIC_PATH') && file_exists(PUBLIC_PATH . '/assets/css/' . $currentPage . '.css')) {
+    $currentDir = basename(dirname($_SERVER['PHP_SELF']));
+    
+    if ($currentDir === 'categories') {
+        echo '<link rel="stylesheet" href="' . ASSETS_URL . '/css/categories.css">';
+    } elseif (defined('PUBLIC_PATH') && file_exists(PUBLIC_PATH . '/assets/css/' . $currentPage . '.css')) {
         echo '<link rel="stylesheet" href="' . ASSETS_URL . '/css/' . $currentPage . '.css">';
     }
     ?>
@@ -56,8 +60,8 @@ require_once __DIR__ . '/../../utils/functions.php';
                             Catégories <i class="fas fa-chevron-down"></i>
                         </button>
                         <div class="dropdown-menu">
-                            <a href="<?= SITE_URL ?>/../categories/action.php" class="dropdown-item">Action</a>
-                            <a href="<?= SITE_URL ?>/../categories/drama.php" class="dropdown-item">Drame</a>
+                            <a href="<?= SITE_URL ?>/categories/action.php" class="dropdown-item">Action</a>
+                            <a href="<?= SITE_URL ?>/categories/drama.php" class="dropdown-item">Drame</a>
                         </div>
                     </div>
                     
@@ -136,8 +140,8 @@ require_once __DIR__ . '/../../utils/functions.php';
                 <p>© <?= date('Y') ?> <?= SITE_NAME ?>. Tous droits réservés.</p>
                 <div class="footer-links">
                     <a href="<?= SITE_URL ?>/index.php" class="footer-link">Accueil</a>
-                    <a href="<?= SITE_URL ?>/../categories/action.php" class="footer-link">Action</a>
-                    <a href="<?= SITE_URL ?>/../categories/drama.php" class="footer-link">Drame</a>
+                    <a href="<?= SITE_URL ?>/categories/action.php" class="footer-link">Action</a>
+                    <a href="<?= SITE_URL ?>/categories/drama.php" class="footer-link">Drame</a>
                 </div>
             </div>
         </div>
