@@ -19,11 +19,20 @@ ob_start();
             <h1 class="hero-title">Bienvenue sur MovieCart</h1>
             <p class="hero-description">Découvrez, achetez et collectionnez vos films préférés.</p>
             <div class="hero-buttons">
-                <a href="<?= SITE_URL ?>/../categories/action.php" class="btn btn-primary">
+                <a href="<?= SITE_URL ?>/categories/action.php" class="btn-outline">
                     Films d'action
                 </a>
-                <a href="<?= SITE_URL ?>/../categories/drama.php" class="btn-outline">
+                <a href="<?= SITE_URL ?>/categories/drama.php" class="btn-outline">
                     Films dramatiques
+                </a>
+                <a href="<?= SITE_URL ?>/categories/adventure.php" class="btn-outline">
+                    Film d'aventures
+                </a>
+                <a href="<?= SITE_URL ?>/categories/scifi.php" class="btn-outline">
+                    Film de science-fiction
+                </a>
+                <a href="<?= SITE_URL ?>/categories/comedy.php" class="btn-outline">
+                    Film de comédie
                 </a>
             </div>
         </div>
@@ -91,7 +100,7 @@ ob_start();
                         <div class="movie-footer">
                             <span class="movie-price"><?= number_format($movie['price'], 2) ?> €</span>
                             <?php if (isLoggedIn()): ?>
-                                <a href="<?= SITE_URL ?>/../add-to-cart.php?id=<?= $movie['id'] ?>" class="btn btn-primary">
+                                <a href="<?= SITE_URL ?>/add-to-cart.php?id=<?= $movie['id'] ?>" class="btn btn-primary">
                                     <i class="fas fa-shopping-cart"></i> Ajouter
                                 </a>
                             <?php else: ?>
@@ -127,6 +136,27 @@ ob_start();
                 <i class="fas fa-theater-masks"></i>
             </div>
             <div class="category-name">Drame</div>
+        </a>
+
+        <a href="<?= SITE_URL ?>/categories/adventure.php" class="category-card">
+            <div class="category-icon category-adventure">
+                <i class="fas fa-compass"></i>
+            </div>
+            <div class="category-name">Aventure</div>
+        </a>
+
+        <a href="<?= SITE_URL ?>/categories/scifi.php" class="category-card">
+            <div class="category-icon category-scifi">
+                <i class="fas fa-rocket"></i>
+            </div>
+            <div class="category-name">Science-fiction</div>
+        </a>
+
+        <a href="<?= SITE_URL ?>/categories/comedy.php" class="category-card">
+            <div class="category-icon category-comedy">
+                <i class="fas fa-laugh"></i>
+            </div>
+            <div class="category-name">Comédie</div>
         </a>
     </div>
 </section>

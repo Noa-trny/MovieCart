@@ -11,12 +11,13 @@ require_once __DIR__ . '/../../utils/functions.php';
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="icon" href="<?= ASSETS_URL ?>/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="<?= ASSETS_URL ?>/css/common.css">
+    <link rel="stylesheet" href="<?= ASSETS_URL ?>/css/categories.css">
     <?php
     $currentPage = basename($_SERVER['PHP_SELF'], '.php');
     $currentDir = basename(dirname($_SERVER['PHP_SELF']));
     
-    if ($currentDir === 'categories') {
-        echo '<link rel="stylesheet" href="' . ASSETS_URL . '/css/categories.css">';
+    if ($currentPage === 'index') {
+        echo '<link rel="stylesheet" href="' . ASSETS_URL . '/css/index.css">';
     } elseif (defined('PUBLIC_PATH') && file_exists(PUBLIC_PATH . '/assets/css/' . $currentPage . '.css')) {
         echo '<link rel="stylesheet" href="' . ASSETS_URL . '/css/' . $currentPage . '.css">';
     }
@@ -62,6 +63,9 @@ require_once __DIR__ . '/../../utils/functions.php';
                         <div class="dropdown-menu">
                             <a href="<?= SITE_URL ?>/categories/action.php" class="dropdown-item">Action</a>
                             <a href="<?= SITE_URL ?>/categories/drama.php" class="dropdown-item">Drame</a>
+                            <a href="<?= SITE_URL ?>/categories/adventure.php" class="dropdown-item">Aventure</a>
+                            <a href="<?= SITE_URL ?>/categories/scifi.php" class="dropdown-item">Science-fiction</a>
+                            <a href="<?= SITE_URL ?>/categories/comedy.php" class="dropdown-item">Comédie</a>
                         </div>
                     </div>
                     
@@ -142,6 +146,9 @@ require_once __DIR__ . '/../../utils/functions.php';
                     <a href="<?= SITE_URL ?>/index.php" class="footer-link">Accueil</a>
                     <a href="<?= SITE_URL ?>/categories/action.php" class="footer-link">Action</a>
                     <a href="<?= SITE_URL ?>/categories/drama.php" class="footer-link">Drame</a>
+                    <a href="<?= SITE_URL ?>/categories/adventure.php" class="footer-link">Aventure</a>
+                    <a href="<?= SITE_URL ?>/categories/scifi.php" class="footer-link">Science-fiction</a>
+                    <a href="<?= SITE_URL ?>/categories/comedy.php" class="footer-link">Comédie</a>
                 </div>
             </div>
         </div>

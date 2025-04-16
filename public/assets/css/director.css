@@ -108,6 +108,40 @@
     color: #3b82f6;
 }
 
+.btn-add {
+    background-color: #3b82f6;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    transition: background-color 0.3s;
+}
+
+.btn-add:hover {
+    background-color: #2563eb;
+}
+
+.btn-add i {
+    margin-right: 4px;
+}
+
+.btn-login {
+    background-color: #e5e7eb;
+    color: #4b5563;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    transition: background-color 0.3s;
+}
+
+.btn-login:hover {
+    background-color: #d1d5db;
+}
+
+.btn-login i {
+    margin-right: 4px;
+}
+
 .empty-state {
     background-color: #f9fafb;
     border-radius: 8px;

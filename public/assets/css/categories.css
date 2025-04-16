@@ -207,4 +207,25 @@
     justify-content: space-between;
     align-items: center;
     margin-top: auto;
+}
+
+/* Styles pour les icônes de catégories */
+.category-icon.category-action {
+    background-color: #dc2626 !important;
+}
+
+.category-icon.category-drama {
+    background-color: #3b82f6 !important;
+}
+
+.category-icon.category-adventure {
+    background-color: #10B981 !important;
+}
+
+.category-icon.category-scifi {
+    background-color: #8B5CF6 !important;
+}
+
+.category-icon.category-comedy {
+    background-color: #F59E0B !important;
 } 

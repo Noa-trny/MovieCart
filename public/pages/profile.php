@@ -16,7 +16,7 @@ if (!isLoggedIn()) {
 $userId = $_SESSION['user_id'];
 $conn = connectDB();
 
-$stmt = $conn->prepare("SELECT id, username, email FROM users WHERE id = ?");
+$stmt = $conn->prepare("SELECT id, username, email, created_at FROM users WHERE id = ?");
 $stmt->bind_param("i", $userId);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -126,7 +126,7 @@ ob_start();
                 
                 <div class="form-group">
                     <label class="form-label">Membre depuis</label>
-                    <div><?= (new DateTime($user['created_at']))->format('d/m/Y') ?></div>
+                    <div><?= isset($user['created_at']) ? (new DateTime($user['created_at']))->format('d/m/Y') : 'Date non disponible' ?></div>
                 </div>
             </div>
         </div>

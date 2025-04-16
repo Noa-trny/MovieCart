@@ -186,14 +186,6 @@
     color: white;
 }
 
-.category-action {
-    background-color: #dc2626;
-}
-
-.category-drama {
-    background-color: #3b82f6;
-}
-
 .category-name {
     padding: 15px;
     text-align: center;
@@ -203,6 +195,37 @@
 
 .category-card:hover .category-name {
     color: #3b82f6;
+}
+
+/* Styles spécifiques pour chaque catégorie - spécificité augmentée */
+.category-card .category-icon.category-action,
+body .category-icon.category-action,
+html .category-icon.category-action {
+    background-color: #dc2626 !important;
+}
+
+.category-card .category-icon.category-drama,
+body .category-icon.category-drama,
+html .category-icon.category-drama {
+    background-color: #3b82f6 !important;
+}
+
+.category-card .category-icon.category-adventure,
+body .category-icon.category-adventure,
+html .category-icon.category-adventure {
+    background-color: #10B981 !important;
+}
+
+.category-card .category-icon.category-scifi,
+body .category-icon.category-scifi,
+html .category-icon.category-scifi {
+    background-color: #8B5CF6 !important;
+}
+
+.category-card .category-icon.category-comedy,
+body .category-icon.category-comedy,
+html .category-icon.category-comedy {
+    background-color: #F59E0B !important;
 }
 
 .btn-center {
