@@ -92,7 +92,7 @@ ob_start();
                         <?php if (isset($movie['director_id']) && isset($movie['director_name'])): ?>
                             <p class="movie-director">
                                 Réalisé par 
-                                <a href="<?= SITE_URL ?>/../director.php?id=<?= $movie['director_id'] ?>">
+                                <a href="<?= SITE_URL ?>/director.php?id=<?= $movie['director_id'] ?>">
                                     <?= htmlspecialchars($movie['director_name']) ?>
                                 </a>
                             </p>

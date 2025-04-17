@@ -2,7 +2,11 @@
 require_once __DIR__ . '/../../config/config.php';
 
 function redirectTo($url) {
-    header("Location: " . SITE_URL . $url);
+    if (strpos($url, 'http') === 0) {
+        header("Location: " . $url);
+    } else {
+        header("Location: " . SITE_URL . $url);
+    }
     exit;
 }
 
@@ -541,21 +545,24 @@ function registerUser($email, $password, $confirmPassword) {
     $conn = connectDB();
     $email = sanitizeInput($email);
     
-    $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
-    $stmt->bind_param("s", $email);
+    // Générer un nom d'utilisateur à partir de l'email
+    $username = strtolower(explode('@', $email)[0]);
+    
+    $stmt = $conn->prepare("SELECT id FROM users WHERE email = ? OR username = ?");
+    $stmt->bind_param("ss", $email, $username);
     $stmt->execute();
     $result = $stmt->get_result();
     
     if ($result->num_rows > 0) {
         $stmt->close();
         $conn->close();
-        return ['success' => false, 'message' => 'Cet email est déjà utilisé'];
+        return ['success' => false, 'message' => 'Cet email ou ce nom d\'utilisateur est déjà utilisé'];
     }
     
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
     
-    $stmt = $conn->prepare("INSERT INTO users (email, password, created_at) VALUES (?, ?, NOW())");
-    $stmt->bind_param("ss", $email, $hashedPassword);
+    $stmt = $conn->prepare("INSERT INTO users (username, email, password, created_at) VALUES (?, ?, ?, NOW())");
+    $stmt->bind_param("sss", $username, $email, $hashedPassword);
     
     if ($stmt->execute()) {
         $userId = $conn->insert_id;

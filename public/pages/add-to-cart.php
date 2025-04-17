@@ -1,6 +1,6 @@
 <?php
-require_once __DIR__ . '/../config/config.php';
-require_once __DIR__ . '/../src/utils/functions.php';
+require_once __DIR__ . '/../../config/config.php';
+require_once __DIR__ . '/../../src/utils/functions.php';
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -33,6 +33,6 @@ if (addToCart($movieId, $quantity)) {
     setFlashMessage($movie['title'] . ' a été ajouté à votre panier.', 'success');
 }
 
-$redirect = isset($_GET['redirect']) ? $_GET['redirect'] : (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : SITE_URL . '/cart.php');
+$redirect = isset($_GET['redirect']) ? $_GET['redirect'] : (isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : SITE_URL . '/pages/cart.php');
 redirectTo($redirect);
 ?> 

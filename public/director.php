@@ -1,8 +1,8 @@
 <?php
 $pageTitle = 'Films par réalisateur';
 
-require_once __DIR__ . '/config/config.php';
-require_once __DIR__ . '/src/utils/functions.php';
+require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/../src/utils/functions.php';
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -87,5 +87,5 @@ ob_start();
 <?php
 $content = ob_get_clean();
 $conn->close();
-require_once __DIR__ . '/src/views/layouts/main.php';
+require_once __DIR__ . '/../src/views/layouts/main.php';
 ?> 
