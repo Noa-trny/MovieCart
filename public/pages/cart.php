@@ -34,9 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     
     if (isset($_POST['checkout'])) {
-        # logique d'achat 
-        setFlashMessage("Cette fonctionnalité n'est pas encore disponible.", "error");
-        redirectTo(SITE_URL . '/cart.php');
+        redirectTo(SITE_URL . '/checkout.php');
     }
 }
 

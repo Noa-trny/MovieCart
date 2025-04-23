@@ -22,7 +22,6 @@ MovieCart offre une expérience complète pour les amateurs de cinéma. La plate
 - PHP 7.4 ou supérieur
 - MySQL 5.7 ou supérieur
 - Serveur web (Apache, Nginx)
-- Composer (pour la gestion des dépendances)
 
 ## 🚀 Installation
 
@@ -33,50 +32,69 @@ MovieCart offre une expérience complète pour les amateurs de cinéma. La plate
    ```
 
 2. **Configuration du serveur web**
-   - Configurez votre serveur web pour pointer vers le dossier `public/` comme racine du site
+   - Configurez votre serveur web pour pointer vers le dossier `public/pages/` comme racine du site
    - Assurez-vous que le module de réécriture (mod_rewrite pour Apache) est activé
 
 3. **Base de données**
    ```bash
-   mysql -u votreUtilisateur -p < sql/database.sql
+   mysql -u votreUtilisateur -p < database/schema.sql
    ```
 
 4. **Configuration**
-   - Copiez le fichier de configuration d'exemple
-     ```bash
-     cp config/config.sample.php config/config.php
-     ```
-   - Modifiez le fichier `config/config.php` avec vos informations de connexion à la base de données
+   - Modifiez le fichier `src/config/wamp.php` avec vos informations de connexion à la base de données
      ```php
      define('DB_HOST', 'localhost');
      define('DB_USER', 'votre_utilisateur');
      define('DB_PASS', 'votre_mot_de_passe');
      define('DB_NAME', 'moviecart');
-     define('SITE_URL', 'http://localhost/moviecart');
+     define('SITE_URL', 'http://localhost/MovieCart/public/pages');
      ```
 
 5. **Accès à l'application**
-   - Accédez à l'application via l'URL configurée (par défaut: http://localhost/moviecart)
+   - Accédez à l'application via l'URL configurée (par défaut: http://localhost/MovieCart/public/pages)
 
 ## 📁 Structure du projet
 
 ```
-moviecart/
-├── config/         # Configuration de l'application
-├── database/       # Scripts et migrations de base de données
-├── public/         # Point d'entrée public de l'application
-│   ├── assets/     # CSS, JS, images
-│   ├── pages/      # Pages publiques
-│   ├── categories/ # Pages de catégories
-│   └── index.php   # Point d'entrée principal
-├── sql/            # Scripts SQL pour la création de la base de données
-└── src/            # Code source de l'application
-    ├── api/        # API endpoints
-    ├── auth/       # Gestion de l'authentification
-    ├── config/     # Configuration interne
-    ├── models/     # Modèles de données
-    ├── utils/      # Fonctions utilitaires
-    └── views/      # Templates et vues
+MovieCart/
+├── config/               # Configuration générale de l'application
+│   └── config.php        # Configuration principale
+├── database/             # Scripts de base de données
+│   └── schema.sql        # Schéma de base de données
+├── public/               # Fichiers accessibles publiquement
+│   ├── assets/           # Ressources statiques
+│   │   ├── css/          # Fichiers CSS
+│   │   │   ├── components/ # Composants CSS réutilisables
+│   │   │   │   └── dropdown.css # Styles des menus déroulants
+│   │   │   ├── common.css # Styles communs à toutes les pages
+│   │   │   ├── profile.css # Styles de la page de profil
+│   │   │   └── ... (autres styles spécifiques)
+│   │   └── images/       # Images et icônes
+│   └── pages/            # Pages de l'application
+│       ├── categories/   # Pages de catégories de films
+│       │   ├── action.php # Films d'action
+│       │   ├── adventure.php # Films d'aventure
+│       │   └── ... (autres catégories)
+│       ├── index.php     # Page d'accueil
+│       ├── movie.php     # Page de détail d'un film
+│       ├── profile.php   # Page de profil utilisateur
+│       ├── cart.php      # Page du panier
+│       ├── checkout.php  # Page de paiement
+│       ├── login.php     # Page de connexion
+│       └── ... (autres pages)
+└── src/                  # Code source de l'application
+    ├── api/              # Définitions d'API (non utilisées actuellement)
+    ├── config/           # Configuration interne
+    │   ├── config.php    # Variables de configuration
+    │   ├── database.php  # Configuration de la base de données
+    │   └── wamp.php      # Configuration spécifique pour WAMP
+    ├── models/           # Modèles de données
+    │   └── Library.php   # Gestion de la bibliothèque de films
+    ├── utils/            # Fonctions utilitaires
+    │   └── functions.php # Fonctions communes réutilisables
+    └── views/            # Templates et vues
+        └── layouts/      # Layouts principaux
+            └── main.php  # Layout principal de l'application
 ```
 
 ## 🔑 Comptes par défaut
@@ -94,30 +112,8 @@ moviecart/
 - 🐘 PHP pour le backend
 - 🗄️ MySQL pour la base de données
 - 🎨 HTML5/CSS3 pour la structure et le style
-- 💅 Tailwind CSS pour le framework CSS
 - 📊 JavaScript pour les interactions côté client
 - 🅰️ Font Awesome pour les icônes
-
-## 🚧 Développement
-
-Pour contribuer au projet:
-
-1. Créez une branche pour votre fonctionnalité
-   ```bash
-   git checkout -b feature/ma-nouvelle-fonctionnalite
-   ```
-
-2. Commitez vos changements
-   ```bash
-   git commit -m 'Ajout d'une nouvelle fonctionnalité'
-   ```
-
-3. Poussez vers la branche
-   ```bash
-   git push origin feature/ma-nouvelle-fonctionnalite
-   ```
-
-4. Ouvrez une Pull Request
 
 ## 👥 Auteurs
 

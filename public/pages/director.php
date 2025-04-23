@@ -25,7 +25,6 @@ if (!$director) {
 
 $movies = getMoviesByDirector($directorId);
 
-// Ajout du lien vers la feuille de style spécifique
 $additionalStyles = '<link rel="stylesheet" href="' . ASSETS_URL . '/css/director.css">';
 
 ob_start();
@@ -88,7 +87,5 @@ ob_start();
 <?php
 $content = ob_get_clean();
 $conn->close();
-
-// Passer la variable $additionalStyles au layout
 require_once __DIR__ . '/../../src/views/layouts/main.php';
 ?> 

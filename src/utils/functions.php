@@ -2,7 +2,11 @@
 require_once __DIR__ . '/../../config/config.php';
 
 function redirectTo($url) {
-    header("Location: " . SITE_URL . $url);
+    if (strpos($url, 'http') === 0) {
+        header("Location: " . $url);
+    } else {
+        header("Location: " . SITE_URL . $url);
+    }
     exit;
 }
 
@@ -114,7 +118,7 @@ function getMovieById($id) {
     return null;
 }
 
-function getFeaturedMovies($limit = 6) {
+function getFeaturedMovies($limit = 8) {
     $conn = connectDB();
     $movies = [];
     $categoriesExist = tableExists('categories');
@@ -169,10 +173,6 @@ function getFeaturedMovies($limit = 6) {
             while ($row = $result->fetch_assoc()) {
                 $movies[] = $row;
             }
-        }
-
-        if (isAdmin()) {
-            setFlashMessage("Le champ 'featured' n'existe pas dans la table 'movies'. Veuillez mettre à jour votre base de données.", 'warning');
         }
     }
     
@@ -258,12 +258,42 @@ function searchMovies($query) {
     return $movies;
 }
 
+function getAllMovies() {
+    $categoriesExist = tableExists('categories');
+    
+    $sql = "SELECT m.*, d.name as director_name";
+    
+    if ($categoriesExist) {
+        $sql .= ", c.name as category_name";
+    }
+    
+    $sql .= " FROM movies m 
+              LEFT JOIN directors d ON m.director_id = d.id";
+    
+    if ($categoriesExist) {
+        $sql .= " LEFT JOIN categories c ON m.category_id = c.id";
+    }
+    
+    $sql .= " ORDER BY m.title ASC";
+    
+    $result = executeQuery($sql, "", []);
+    
+    $movies = [];
+    if ($result) {
+        while ($row = $result->fetch_assoc()) {
+            $movies[] = $row;
+        }
+    }
+    
+    return $movies;
+}
+
 function isUserAuthenticated() {
     return isLoggedIn();
 }
 
 function isAdmin() {
-    return false; // Temporairement désactivé jusqu'à l'implémentation de la gestion des administrateurs
+    return false; 
 }
 
 function getCart() {
@@ -426,6 +456,34 @@ function getCartItemCount() {
     return $count;
 }
 
+function hasUserPurchasedMovie($userId, $movieId) {
+    $conn = connectDB();
+    $purchased = false;
+    
+    $stmt = $conn->prepare(
+        "SELECT COUNT(*) as count
+         FROM orders o
+         JOIN order_items oi ON o.id = oi.order_id
+         WHERE o.user_id = ? AND oi.movie_id = ? AND o.status = 'completed'"
+    );
+    
+    if ($stmt) {
+        $stmt->bind_param("ii", $userId, $movieId);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        
+        if ($result->num_rows > 0) {
+            $row = $result->fetch_assoc();
+            $purchased = ($row['count'] > 0);
+        }
+        
+        $stmt->close();
+    }
+    
+    $conn->close();
+    return $purchased;
+}
+
 function getUserPurchases($userId) {
     $conn = connectDB();
     $movies = [];
@@ -541,21 +599,23 @@ function registerUser($email, $password, $confirmPassword) {
     $conn = connectDB();
     $email = sanitizeInput($email);
     
-    $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
-    $stmt->bind_param("s", $email);
+    $username = strtolower(explode('@', $email)[0]);
+    
+    $stmt = $conn->prepare("SELECT id FROM users WHERE email = ? OR username = ?");
+    $stmt->bind_param("ss", $email, $username);
     $stmt->execute();
     $result = $stmt->get_result();
     
     if ($result->num_rows > 0) {
         $stmt->close();
         $conn->close();
-        return ['success' => false, 'message' => 'Cet email est déjà utilisé'];
+        return ['success' => false, 'message' => 'Cet email ou ce nom d\'utilisateur est déjà utilisé'];
     }
     
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
     
-    $stmt = $conn->prepare("INSERT INTO users (email, password, created_at) VALUES (?, ?, NOW())");
-    $stmt->bind_param("ss", $email, $hashedPassword);
+    $stmt = $conn->prepare("INSERT INTO users (username, email, password, created_at) VALUES (?, ?, ?, NOW())");
+    $stmt->bind_param("sss", $username, $email, $hashedPassword);
     
     if ($stmt->execute()) {
         $userId = $conn->insert_id;

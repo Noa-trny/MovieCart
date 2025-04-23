@@ -9,9 +9,10 @@ require_once __DIR__ . '/../../utils/functions.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?= isset($pageTitle) ? htmlspecialchars($pageTitle) . ' - ' : '' ?>MovieCart</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="icon" href="<?= ASSETS_URL ?>/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="<?= ASSETS_URL ?>/images/icon.png" type="image/png">
     <link rel="stylesheet" href="<?= ASSETS_URL ?>/css/common.css">
     <link rel="stylesheet" href="<?= ASSETS_URL ?>/css/categories.css">
+    <link rel="stylesheet" href="<?= ASSETS_URL ?>/css/components/dropdown.css">
     <?php
     $currentPage = basename($_SERVER['PHP_SELF'], '.php');
     $currentDir = basename(dirname($_SERVER['PHP_SELF']));
@@ -21,13 +22,22 @@ require_once __DIR__ . '/../../utils/functions.php';
     } elseif (defined('PUBLIC_PATH') && file_exists(PUBLIC_PATH . '/assets/css/' . $currentPage . '.css')) {
         echo '<link rel="stylesheet" href="' . ASSETS_URL . '/css/' . $currentPage . '.css">';
     }
+    
+    if (isset($customCss)) {
+        $cssPath = ASSETS_URL . $customCss;
+        echo '<link rel="stylesheet" href="' . $cssPath . '">';
+    }
+    
+    if (isset($additionalCss)) {
+        $additionalCssPath = ASSETS_URL . $additionalCss;
+        echo '<link rel="stylesheet" href="' . $additionalCssPath . '">';
+    }
+    
+    if (isset($customHead)) {
+        echo $customHead;
+    }
     ?>
     <meta name="description" content="Plateforme de vente de films en ligne. Trouvez, achetez et téléchargez vos films préférés.">
-    <style>
-        .search-input-group input {
-            pointer-events: auto !important;
-        }
-    </style>
 </head>
 <body>
     <header>

@@ -76,11 +76,13 @@ ob_start();
             <?php foreach ($featuredMovies as $movie): ?>
                 <div class="movie-card">
                     <div class="movie-poster-container">
-                        <img 
-                            src="<?= isset($movie['poster_path']) ? $movie['poster_path'] : ASSETS_URL . '/images/movie-placeholder.jpg' ?>" 
-                            alt="<?= htmlspecialchars($movie['title']) ?>" 
-                            class="movie-poster"
-                        >
+                        <a href="<?= SITE_URL ?>/movie.php?id=<?= $movie['id'] ?>">
+                            <img 
+                                src="<?= isset($movie['poster_path']) ? $movie['poster_path'] : ASSETS_URL . '/images/movie-placeholder.jpg' ?>" 
+                                alt="<?= htmlspecialchars($movie['title']) ?>" 
+                                class="movie-poster"
+                            >
+                        </a>
                         <?php if (isset($movie['category_name'])): ?>
                             <div class="movie-category">
                                 <?= htmlspecialchars($movie['category_name']) ?>
@@ -88,11 +90,15 @@ ob_start();
                         <?php endif; ?>
                     </div>
                     <div class="movie-info">
-                        <h3 class="movie-title"><?= htmlspecialchars($movie['title']) ?></h3>
+                        <h3 class="movie-title">
+                            <a href="<?= SITE_URL ?>/movie.php?id=<?= $movie['id'] ?>" style="text-decoration: none; color: inherit;">
+                                <?= htmlspecialchars($movie['title']) ?>
+                            </a>
+                        </h3>
                         <?php if (isset($movie['director_id']) && isset($movie['director_name'])): ?>
                             <p class="movie-director">
                                 Réalisé par 
-                                <a href="<?= SITE_URL ?>/../director.php?id=<?= $movie['director_id'] ?>">
+                                <a href="<?= SITE_URL ?>/director.php?id=<?= $movie['director_id'] ?>">
                                     <?= htmlspecialchars($movie['director_name']) ?>
                                 </a>
                             </p>
@@ -100,9 +106,15 @@ ob_start();
                         <div class="movie-footer">
                             <span class="movie-price"><?= number_format($movie['price'], 2) ?> €</span>
                             <?php if (isLoggedIn()): ?>
-                                <a href="<?= SITE_URL ?>/add-to-cart.php?id=<?= $movie['id'] ?>" class="btn btn-primary">
-                                    <i class="fas fa-shopping-cart"></i> Ajouter
-                                </a>
+                                <?php if (hasUserPurchasedMovie($_SESSION['user_id'], $movie['id'])): ?>
+                                    <a href="<?= SITE_URL ?>/movie.php?id=<?= $movie['id'] ?>" class="btn btn-secondary">
+                                        <i class="fas fa-check"></i> Déjà acheté
+                                    </a>
+                                <?php else: ?>
+                                    <a href="<?= SITE_URL ?>/add-to-cart.php?id=<?= $movie['id'] ?>" class="btn btn-primary">
+                                        <i class="fas fa-shopping-cart"></i> Ajouter
+                                    </a>
+                                <?php endif; ?>
                             <?php else: ?>
                                 <a href="<?= SITE_URL ?>/login.php" class="btn btn-primary">
                                     <i class="fas fa-lock"></i> Connexion
@@ -115,7 +127,7 @@ ob_start();
         </div>
     <?php endif; ?>
     
-    <a href="<?= SITE_URL ?>/categories.php" class="btn btn-primary btn-center">
+    <a href="<?= SITE_URL ?>/movies.php" class="btn btn-primary btn-center">
         Voir tous les films
     </a>
 </section>

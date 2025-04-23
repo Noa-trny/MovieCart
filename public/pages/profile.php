@@ -1,8 +1,10 @@
 <?php
 $pageTitle = 'Mon profil';
+$customCss = '/css/profile.css';
 
 require_once __DIR__ . '/../../config/config.php';
 require_once __DIR__ . '/../../src/utils/functions.php';
+require_once __DIR__ . '/../../src/models/Library.php';
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
@@ -75,19 +77,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
     }
 }
 
-$tableExists = false;
-$tableExistsQuery = "SELECT 1 FROM information_schema.tables 
-                    WHERE table_schema = '" . DB_NAME . "' 
-                    AND table_name = 'purchases'";
-$tableResult = $conn->query($tableExistsQuery);
-if ($tableResult && $tableResult->num_rows > 0) {
-    $tableExists = true;
-}
+$library = new Library($userId);
+$purchasedMovies = $library->getMovies();
 
-$purchasedMovies = [];
-if ($tableExists) {
-    $purchasedMovies = getUserPurchases($userId);
+$uniqueMovies = [];
+foreach ($purchasedMovies as $movie) {
+    if (!isset($uniqueMovies[$movie['id']])) {
+        $uniqueMovies[$movie['id']] = $movie;
+    }
 }
+$libraryMovies = array_values($uniqueMovies);
+usort($libraryMovies, function($a, $b) {
+    return strcmp($a['title'], $b['title']);
+});
 
 ob_start();
 ?>
@@ -104,29 +106,24 @@ ob_start();
     </div>
     
     <div class="profile-grid">
-        <div class="profile-card">
+        <div class="profile-card info-card">
             <div class="profile-card-header">
                 <h2 class="profile-card-title">Informations personnelles</h2>
             </div>
-            <div class="profile-card-body">
-                <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <div><?= htmlspecialchars($user['email']) ?></div>
+            <div class="profile-card-body" style="padding: 2rem;">
+                <div class="form-group" style="margin-bottom: 2rem; padding-bottom: 1.8rem; border-bottom: 1px solid #e5e7eb;">
+                    <label class="form-label" style="margin-bottom: 0.8rem; font-size: 0.95rem;">Email</label>
+                    <div style="font-size: 1.1rem; padding: 0.5rem 0; color: #3b82f6;"><?= htmlspecialchars($user['email']) ?></div>
                 </div>
                 
-                <div class="form-group">
-                    <label class="form-label">Prénom</label>
-                    <div><?= !empty($user['firstname']) ? htmlspecialchars($user['firstname']) : 'Non renseigné' ?></div>
+                <div class="form-group" style="margin-bottom: 2rem; padding-bottom: 1.8rem; border-bottom: 1px solid #e5e7eb;">
+                    <label class="form-label" style="margin-bottom: 0.8rem; font-size: 0.95rem;">Nom d'utilisateur</label>
+                    <div style="font-size: 1.2rem; padding: 0.5rem 0; font-weight: 600; color: #1f2937;"><?= htmlspecialchars($user['username']) ?></div>
                 </div>
                 
-                <div class="form-group">
-                    <label class="form-label">Nom</label>
-                    <div><?= !empty($user['lastname']) ? htmlspecialchars($user['lastname']) : 'Non renseigné' ?></div>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Membre depuis</label>
-                    <div><?= isset($user['created_at']) ? (new DateTime($user['created_at']))->format('d/m/Y') : 'Date non disponible' ?></div>
+                <div class="form-group" style="margin-bottom: 0; padding-bottom: 0;">
+                    <label class="form-label" style="margin-bottom: 0.8rem; font-size: 0.95rem;">Membre depuis</label>
+                    <div style="font-size: 0.95rem; padding: 0.5rem 0; color: #10b981; font-style: italic;"><?= isset($user['created_at']) ? (new DateTime($user['created_at']))->format('d/m/Y') : 'Date non disponible' ?></div>
                 </div>
             </div>
         </div>
@@ -167,84 +164,89 @@ ob_start();
             </div>
         </div>
         
-        <div class="profile-card">
+        <div class="profile-card purchases-card">
             <div class="profile-card-header">
-                <h2 class="profile-card-title">Mes achats</h2>
+                <h2 class="profile-card-title">Mes achats récents <?= !empty($purchasedMovies) ? '(' . count($purchasedMovies) . ')' : '' ?></h2>
             </div>
-            <div class="profile-card-body">
-                <div id="purchased-movies" class="purchased-movies">
-                    <div class="purchases-loading">
-                        <i class="fas fa-spinner fa-spin"></i> Chargement de votre bibliothèque...
-                    </div>
+            <div class="profile-card-body" style="padding: 15px;">
+                <div id="purchased-movies" style="max-height: 350px; overflow-y: auto; padding-right: 10px;">
+                    <?php if (empty($purchasedMovies)): ?>
+                        <div class="purchases-empty">
+                            <i class="fas fa-film purchases-empty-icon"></i>
+                            <p class="purchases-empty-text">Vous n'avez pas encore acheté de films.</p>
+                            <a href="<?= SITE_URL ?>/" class="btn btn-primary discover-btn">
+                                <i class="fas fa-search"></i> Découvrir des films
+                            </a>
+                        </div>
+                    <?php else: ?>
+                        <div style="display: grid; grid-template-columns: 1fr; gap: 15px;">
+                            <?php foreach ($purchasedMovies as $movie): ?>
+                                <div style="display: flex; background-color: white; border-radius: 6px; overflow: hidden; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); transition: transform 0.2s ease, box-shadow 0.2s ease;">
+                                    <div style="width: 80px; flex-shrink: 0;">
+                                        <img 
+                                            src="<?= !empty($movie['poster_path']) ? $movie['poster_path'] : ASSETS_URL . '/images/movie-placeholder.jpg' ?>" 
+                                            alt="<?= htmlspecialchars($movie['title']) ?>" 
+                                            style="width: 100%; height: 120px; object-fit: cover;"
+                                        >
+                                    </div>
+                                    <div style="padding: 12px; flex-grow: 1;">
+                                        <h3 style="font-size: 1.1rem; font-weight: 600; margin: 0 0 8px 0;">
+                                            <a href="<?= SITE_URL ?>/movie.php?id=<?= $movie['id'] ?>" style="color: #1f2937; text-decoration: none; transition: color 0.3s;">
+                                                <?= htmlspecialchars($movie['title']) ?>
+                                            </a>
+                                        </h3>
+                                        <?php if (!empty($movie['director_name'])): ?>
+                                            <p style="color: #6b7280; font-size: 0.9rem; margin: 0 0 5px 0;">
+                                                Réalisé par <?= htmlspecialchars($movie['director_name']) ?>
+                                            </p>
+                                        <?php endif; ?>
+                                        <?php if (!empty($movie['purchase_date'])): ?>
+                                            <p style="color: #10b981; font-size: 0.85rem; font-weight: 500; margin: 0;">
+                                                Acheté le <?= (new DateTime($movie['purchase_date']))->format('d/m/Y') ?>
+                                            </p>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
+            </div>
+        </div>  
+        <div class="profile-card library-card" style="background-color: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); overflow: hidden; height: fit-content; width: 100%; max-width: 100%;">
+            <div class="profile-card-header" style="background-color: #f3f4f6; padding: 15px 20px; border-bottom: 1px solid #e5e7eb;">
+                <h2 class="profile-card-title" style="font-size: 1.2rem; font-weight: bold; color: #1f2937; margin: 0;">
+                    Ma bibliothèque <?= !empty($libraryMovies) ? '(' . count($libraryMovies) . ')' : '' ?>
+                </h2>
+            </div>
+            <div class="profile-card-body" style="padding: 15px;">
+                <?php if (empty($libraryMovies)): ?>
+                    <div style="text-align: center; padding: 30px 0;">
+                        <i class="fas fa-film" style="font-size: 2.5rem; color: #9ca3af; margin-bottom: 10px;"></i>
+                        <p style="color: #6b7280;">Votre bibliothèque est vide.</p>
+                        <a href="<?= SITE_URL ?>/" class="btn btn-primary" style="margin-top: 10px;">
+                            <i class="fas fa-search"></i> Découvrir des films
+                        </a>
+                    </div>
+                <?php else: ?>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-height: 350px; overflow-y: auto; padding: 5px;">
+                        <?php foreach ($libraryMovies as $movie): ?>
+                            <div style="width: 100%; margin: 0; padding: 0; border-radius: 4px; overflow: hidden; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); transition: transform 0.2s ease; position: relative;">
+                                <a href="<?= SITE_URL ?>/movie.php?id=<?= $movie['id'] ?>" style="display: block; width: 100%; position: relative; padding-bottom: 150%;">
+                                    <img 
+                                        src="<?= !empty($movie['poster_path']) ? $movie['poster_path'] : ASSETS_URL . '/images/movie-placeholder.jpg' ?>" 
+                                        alt="<?= htmlspecialchars($movie['title']) ?>" 
+                                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;"
+                                    >
+                                </a>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
 </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    fetchPurchasedMovies();
-});
-
-function fetchPurchasedMovies() {
-    fetch('<?= SITE_URL ?>/../src/api/library.php')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Erreur réseau');
-            }
-            return response.json();
-        })
-        .then(data => {
-            displayPurchasedMovies(data);
-        })
-        .catch(error => {
-            console.error('Erreur:', error);
-            document.getElementById('purchased-movies').innerHTML = `
-                <div class="purchases-empty">
-                    <i class="fas fa-exclamation-circle purchases-empty-icon"></i>
-                    <p class="purchases-empty-text">Impossible de charger votre bibliothèque. Veuillez réessayer plus tard.</p>
-                </div>
-            `;
-        });
-}
-
-function displayPurchasedMovies(movies) {
-    const container = document.getElementById('purchased-movies');
-    
-    if (!movies || movies.length === 0) {
-        container.innerHTML = `
-            <div class="purchases-empty">
-                <i class="fas fa-film purchases-empty-icon"></i>
-                <p class="purchases-empty-text">Vous n'avez pas encore acheté de films.</p>
-            </div>
-        `;
-        return;
-    }
-    
-    let html = '';
-    
-    movies.forEach(movie => {
-        html += `
-            <div class="movie-item">
-                <img 
-                    src="${movie.poster_path || '<?= ASSETS_URL ?>/images/movie-placeholder.jpg'}" 
-                    alt="${movie.title}" 
-                    class="movie-item-poster"
-                >
-                <div class="movie-item-info">
-                    <h3 class="movie-item-title">
-                        <a href="<?= SITE_URL ?>/movie.php?id=${movie.id}">${movie.title}</a>
-                    </h3>
-                    ${movie.director_name ? `<p class="movie-item-director">Réalisé par ${movie.director_name}</p>` : ''}
-                </div>
-            </div>
-        `;
-    });
-    
-    container.innerHTML = html;
-}
-</script>
 
 <?php
 $content = ob_get_clean();
