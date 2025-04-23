@@ -82,8 +82,7 @@ INSERT INTO categories (name, slug, description) VALUES
 ('Drama', 'drama', 'Emotional and character-driven stories'),
 ('Comedy', 'comedy', 'Funny and entertaining movies'),
 ('Sci-Fi', 'sci-fi', 'Science fiction and futuristic stories'),
-('Horror', 'horror', 'Scary and suspenseful movies'),
-('Adventure', 'adventure', 'Exciting journey and exploration stories');
+('Horror', 'horror', 'Scary and suspenseful movies');
 
 -- Insertion des réalisateurs
 INSERT INTO directors (name, biography) VALUES
@@ -99,11 +98,7 @@ INSERT INTO directors (name, biography) VALUES
 ('Jordan Peele', 'American filmmaker known for his innovative horror films with social commentary'),
 ('Guillermo del Toro', 'Mexican filmmaker known for his fantasy and horror films'),
 ('Greta Gerwig', 'American filmmaker and actress known for her coming-of-age films'),
-('Bong Joon-ho', 'South Korean filmmaker known for his genre-blending films with social themes'),
-('Taika Waititi', 'New Zealand filmmaker known for his quirky comedy and adventure films'),
-('Edgar Wright', 'British filmmaker known for his fast-paced editing style and comedy films'),
-('Jon Favreau', 'American filmmaker known for his work in the Marvel universe and adventure films'),
-('Peter Jackson', 'New Zealand filmmaker known for The Lord of the Rings trilogy');
+('Bong Joon-ho', 'South Korean filmmaker known for his genre-blending films with social themes');
 
 -- Insertion des acteurs
 INSERT INTO actors (name, biography) VALUES
@@ -136,15 +131,7 @@ INSERT INTO actors (name, biography) VALUES
 ('Saoirse Ronan', 'Irish-American actress known for her roles in Lady Bird and Little Women'),
 ('Florence Pugh', 'British actress known for her roles in Midsommar and Little Women'),
 ('Song Kang-ho', 'South Korean actor known for his role in Parasite'),
-('Choi Woo-shik', 'South Korean actor known for his role in Parasite'),
-('Chris Hemsworth', 'Australian actor known for his role as Thor'),
-('Karen Gillan', 'Scottish actress known for her roles in Guardians of the Galaxy and Jumanji'),
-('Dwayne Johnson', 'American actor and former wrestler known for his action and comedy roles'),
-('Jack Black', 'American actor and comedian known for his energetic performances'),
-('Elijah Wood', 'American actor known for his role as Frodo in The Lord of the Rings'),
-('Viggo Mortensen', 'Danish-American actor known for his role as Aragorn in The Lord of the Rings'),
-('Simon Pegg', 'British actor known for his comedy work with Edgar Wright'),
-('Nick Frost', 'British actor known for his collaborations with Simon Pegg');
+('Choi Woo-shik', 'South Korean actor known for his role in Parasite');
 
 -- Insertion d'un utilisateur
 INSERT INTO users (username, email, password) VALUES
@@ -164,9 +151,9 @@ INSERT INTO movies (title, description, release_year, duration, price, poster_pa
 ('Avatar', 'A paraplegic Marine dispatched to the moon Pandora on a unique mission becomes torn between following his orders and protecting the world he feels is his home.', 2009, 162, 15.99, 'https://m.media-amazon.com/images/M/MV5BZDA0OGQxNTItMDZkMC00N2UyLTg3MzMtYTJmNjg3Nzk5MzRiXkEyXkFqcGdeQXVyMjUzOTY1NTc@._V1_SX300.jpg', 2, 4),
 ('The Martian', 'An astronaut becomes stranded on Mars after his team assume him dead, and must rely on his ingenuity to find a way to signal to Earth that he is alive.', 2015, 144, 14.99, 'https://m.media-amazon.com/images/M/MV5BMTc2MTQ3MDA1Nl5BMl5BanBnXkFtZTgwODA3OTI4NjE@._V1_SX300.jpg', 3, 4),
 ('Gone Girl', 'With his wife''s disappearance having become the focus of an intense media circus, a man sees the spotlight turned on him when it''s suspected that he may not be innocent.', 2014, 149, 13.99, 'https://m.media-amazon.com/images/M/MV5BMTk0MDQ3MzAzOV5BMl5BanBnXkFtZTgwNzU1NzE3MjE@._V1_SX300.jpg', 4, 2),
-('Moonrise Kingdom', 'A pair of young lovers flee their New England town, which causes a local search party to fan out to find them.', 2012, 94, 11.99, 'https://img.moviepostershop.com/moonrise-kingdom-movie-poster-2012-1020746934.jpg', 5, 3),
+('Moonrise Kingdom', 'A pair of young lovers flee their New England town, which causes a local search party to fan out to find them.', 2012, 94, 11.99, 'https://m.media-amazon.com/images/M/MV5BMTEwMTMzMjgyMzNeQTJeQWpwZ15BbWU3MDgyNDcyNzE@._V1_SX300.jpg', 5, 3),
 ('Inception', 'A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O.', 2010, 148, 15.99, 'https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg', 6, 4),
-('The Wolf of Wall Street', 'Based on the true story of Jordan Belfort, from his rise to a wealthy stock-broker living the high life to his fall involving crime, corruption and the federal government.', 2013, 180, 14.99, 'https://m.media-amazon.com/images/M/MV5BMjIxMjgxNTk0MF5BMl5BanBnXkFtZTgwNjIyOTg2MDE@._V1_SX300.jpg', 7, 2),
+('The Wolf of Wall Street', 'Based on the true story of Jordan Belfort, from his rise to a wealthy stock-broker living the high life to his fall involving crime, corruption and the federal government.', 2013, 180, 14.99, 'https://m.media-amazon.com/images/M/MV5BMTc2MTQ3MDA1Nl5BMl5BanBnXkFtZTgwODA3OTI4NjE@._V1_SX300.jpg', 7, 2),
 ('Saving Private Ryan', 'Following the Normandy Landings, a group of U.S. soldiers go behind enemy lines to retrieve a paratrooper whose brothers have been killed in action.', 1998, 169, 13.99, 'https://m.media-amazon.com/images/M/MV5BZjhkMDM4MWItZTVjOC00ZDRhLThmYTAtM2I5NzBmNmNlMzI1XkEyXkFqcGdeQXVyNDYyMDk5MTU@._V1_SX300.jpg', 8, 1),
 ('Dune', 'A noble family becomes embroiled in a war for control over the galaxy''s most valuable asset while its heir becomes troubled by visions of a dark future.', 2021, 155, 16.99, 'https://m.media-amazon.com/images/M/MV5BN2FjNmEyNWMtYzM0ZS00NjIyLTg5YzYtYThlMGVjNzE1OGViXkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_SX300.jpg', 9, 4),
 ('Get Out', 'A young African-American visits his white girlfriend''s parents for the weekend, where his simmering uneasiness about their reception of him eventually reaches a boiling point.', 2017, 104, 13.99, 'https://m.media-amazon.com/images/M/MV5BMjUxMDQwNjcyNl5BMl5BanBnXkFtZTgwNzcwMzc0MTI@._V1_SX300.jpg', 10, 5),
@@ -174,13 +161,7 @@ INSERT INTO movies (title, description, release_year, duration, price, poster_pa
 ('The Shape of Water', 'At a top secret research facility in the 1960s, a lonely janitor forms a unique relationship with an amphibious creature that is being held in captivity.', 2017, 123, 13.99, 'https://m.media-amazon.com/images/M/MV5BNGNiNWQ5M2MtNGI0OC00MDA2LWI5NzEtMmZiYjVjMDEyOWYzXkEyXkFqcGdeQXVyMjM4NTM5NDY@._V1_SX300.jpg', 11, 2),
 ('Lady Bird', 'In 2002, an artistically inclined seventeen-year-old girl comes of age in Sacramento, California.', 2017, 94, 12.99, 'https://m.media-amazon.com/images/M/MV5BODhkZGE0NDQtZDc0Zi00YmQ4LWJiNmUtYTY1OGM1ODRmNGVkXkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SX300.jpg', 12, 2),
 ('Little Women', 'Jo March reflects back and forth on her life, telling the beloved story of the March sisters - four young women, each determined to live life on her own terms.', 2019, 135, 14.99, 'https://m.media-amazon.com/images/M/MV5BY2QzYTQyYzItMzAwYi00YjZlLThjNTUtNzMyMDdkYzJiNWM4XkEyXkFqcGdeQXVyMTkxNjUyNQ@@._V1_SX300.jpg', 12, 2),
-('Parasite', 'Greed and class discrimination threaten the newly formed symbiotic relationship between the wealthy Park family and the destitute Kim clan.', 2019, 132, 15.99, 'https://m.media-amazon.com/images/M/MV5BYWZjMjk3ZTItODQ2ZC00NTY5LWE0ZDYtZTI3MjcwN2Q5NTVkXkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_SX300.jpg', 13, 2),
-('Thor: Ragnarok', 'Thor must escape the alien planet Sakaar in time to save Asgard from Hela and the impending Ragnarök.', 2017, 130, 14.99, 'https://m.media-amazon.com/images/M/MV5BMjMyNDkzMzI1OF5BMl5BanBnXkFtZTgwODcxODg5MjI@._V1_SX300.jpg', 14, 6),
-('Jumanji: Welcome to the Jungle', 'Four teenagers are sucked into a magical video game, and the only way they can escape is to work together to finish the game.', 2017, 119, 13.99, 'https://m.media-amazon.com/images/M/MV5BODQ0NDhjYWItYTMxZi00NTk2LWIzNDEtOWZiYWYxZjc2MTgxXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg', 16, 6),
-('The Lord of the Rings: The Fellowship of the Ring', 'A meek Hobbit from the Shire and eight companions set out on a journey to destroy the powerful One Ring and save Middle-earth from the Dark Lord Sauron.', 2001, 178, 15.99, 'https://m.media-amazon.com/images/M/MV5BN2EyZjM3NzUtNWUzMi00MTgxLWI0NTctMzY4M2VlOTdjZWRiXkEyXkFqcGdeQXVyNDUzOTQ5MjY@._V1_SX300.jpg', 17, 6),
-('Shaun of the Dead', 'A man''s uneventful life is disrupted by the zombie apocalypse.', 2004, 99, 12.99, 'https://m.media-amazon.com/images/M/MV5BMTg5Mjk2NDMtZTk0Ny00YTQ0LWIzYWEtMWI5MGQ0Mjg1OTNkXkEyXkFqcGdeQXVyNzkwMjQ5NzM@._V1_SX300.jpg', 15, 3),
-('Hot Fuzz', 'A skilled London police officer is transferred to a small town with a dark secret.', 2007, 121, 12.99, 'https://m.media-amazon.com/images/M/MV5BMzg4MDJhMDMtYmJiMS00ZDZmLThmZWUtYTMwZDM1YTc5MWE2XkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg', 15, 3),
-('The Jungle Book', 'After a threat from the tiger Shere Khan forces him to flee the jungle, a man-cub named Mowgli embarks on a journey of self discovery with the help of panther Bagheera and free-spirited bear Baloo.', 2016, 106, 13.99, 'https://m.media-amazon.com/images/M/MV5BMTc3NTUzNTI4MV5BMl5BanBnXkFtZTgwNjU0NjU5NzE@._V1_SX300.jpg', 16, 6);
+('Parasite', 'Greed and class discrimination threaten the newly formed symbiotic relationship between the wealthy Park family and the destitute Kim clan.', 2019, 132, 15.99, 'https://m.media-amazon.com/images/M/MV5BYWZjMjk3ZTItODQ2ZC00NTY5LWE0ZDYtZTI3MjcwN2Q5NTVkXkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_SX300.jpg', 13, 2);
 
 -- Suppression des données existantes dans la table movie_actors pour éviter les conflits
 DELETE FROM movie_actors;
@@ -214,18 +195,7 @@ INSERT INTO movie_actors (movie_id, actor_id, role) VALUES
 (22, 27, 'Jo March'),        -- Saoirse Ronan dans Little Women
 (22, 28, 'Amy March'),       -- Florence Pugh dans Little Women
 (23, 29, 'Kim Ki-taek'),     -- Song Kang-ho dans Parasite
-(23, 30, 'Kim Ki-woo'),      -- Choi Woo-shik dans Parasite
-(24, 31, 'Thor'),           -- Chris Hemsworth dans Thor: Ragnarok
-(25, 32, 'Ruby Roundhouse'), -- Karen Gillan dans Jumanji
-(25, 33, 'Dr. Smolder Bravestone'), -- Dwayne Johnson dans Jumanji
-(25, 34, 'Professor Shelly Oberon'), -- Jack Black dans Jumanji
-(26, 35, 'Frodo Baggins'), -- Elijah Wood dans LOTR
-(26, 36, 'Aragorn'),       -- Viggo Mortensen dans LOTR
-(27, 37, 'Shaun'),         -- Simon Pegg dans Shaun of the Dead
-(27, 38, 'Ed'),            -- Nick Frost dans Shaun of the Dead
-(28, 37, 'Nicholas Angel'), -- Simon Pegg dans Hot Fuzz
-(28, 38, 'Danny Butterman'), -- Nick Frost dans Hot Fuzz
-(29, 33, 'Voice of Baloo'); -- Dwayne Johnson dans The Jungle Book
+(23, 30, 'Kim Ki-woo');      -- Choi Woo-shik dans Parasite
 
 -- Requêtes de vérification des données
 SELECT 'Directors' as 'Table', COUNT(*) as 'Count' FROM directors;

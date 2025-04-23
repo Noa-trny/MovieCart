@@ -1,8 +1,6 @@
 <?php
-// Database connection configuration
 require_once __DIR__ . '/config.php';
 
-// Function to get database connection
 function getDb() {
     static $pdo = null;
     
@@ -17,7 +15,6 @@ function getDb() {
             
             $pdo = new PDO($dsn, DB_USER, DB_PASS, $options);
         } catch (PDOException $e) {
-            // Log error and display friendly message
             error_log("Database Connection Error: " . $e->getMessage());
             die("Could not connect to the database. Please try again later.");
         }
@@ -26,7 +23,6 @@ function getDb() {
     return $pdo;
 }
 
-// Helper function to execute queries with prepared statements
 function query($sql, $params = []) {
     $db = getDb();
     $stmt = $db->prepare($sql);
@@ -34,19 +30,16 @@ function query($sql, $params = []) {
     return $stmt;
 }
 
-// Get a single row from a query
 function fetchOne($sql, $params = []) {
     $stmt = query($sql, $params);
     return $stmt->fetch();
 }
 
-// Get all rows from a query
 function fetchAll($sql, $params = []) {
     $stmt = query($sql, $params);
     return $stmt->fetchAll();
 }
 
-// Insert data and return last insert ID
 function insert($sql, $params = []) {
     $db = getDb();
     $stmt = $db->prepare($sql);
@@ -54,17 +47,14 @@ function insert($sql, $params = []) {
     return $db->lastInsertId();
 }
 
-// Begin a transaction
 function beginTransaction() {
     getDb()->beginTransaction();
 }
 
-// Commit a transaction
 function commitTransaction() {
     getDb()->commit();
 }
 
-// Rollback a transaction
 function rollbackTransaction() {
     getDb()->rollBack();
 } 

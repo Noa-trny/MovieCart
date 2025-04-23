@@ -1,95 +1,77 @@
 <?php
-require_once __DIR__ . '/../src/config/config.php';
-require_once __DIR__ . '/../src/config/database.php';
+$pageTitle = 'Recherche';
 
-// Get search query
-$query = filter_input(INPUT_GET, 'q', FILTER_SANITIZE_SPECIAL_CHARS);
-$pageTitle = 'Search Results';
+require_once __DIR__ . '/../config/config.php';
+require_once __DIR__ . '/../src/utils/functions.php';
 
-// Initialize movies array
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+$query = isset($_GET['q']) ? sanitizeInput($_GET['q']) : '';
 $movies = [];
 
-// Perform search if query exists
-if ($query) {
-    // Search for movies by title or director name
-    $searchParam = '%' . $query . '%';
-    $movies = fetchAll(
-        "SELECT m.*, d.name as director_name, c.name as category_name
-         FROM movies m
-         LEFT JOIN directors d ON m.director_id = d.id
-         LEFT JOIN categories c ON m.category_id = c.id
-         WHERE m.title LIKE ? OR d.name LIKE ?
-         ORDER BY 
-            CASE 
-                WHEN m.title LIKE ? THEN 1
-                WHEN d.name LIKE ? THEN 2
-                ELSE 3
-            END,
-            m.created_at DESC",
-        [$searchParam, $searchParam, $searchParam, $searchParam]
-    );
+if (!empty($query)) {
+    $movies = searchMovies($query);
 }
 
 ob_start();
 ?>
 
-<div class="max-w-7xl mx-auto">
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8">Résultats de recherche pour "<?= htmlspecialchars($query) ?>"</h1>
+    
     <div class="mb-8">
-        <h1 class="text-3xl font-bold mb-4">Search Results</h1>
-        <p class="text-gray-600">
-            <?php if ($query): ?>
-                Showing results for: <span class="font-semibold"><?= sanitizeOutput($query) ?></span>
-            <?php else: ?>
-                Enter a search term to find movies
-            <?php endif; ?>
-        </p>
+        <form action="<?= SITE_URL ?>/search.php" method="GET" class="flex flex-col md:flex-row gap-4">
+            <div class="flex-grow">
+                <input 
+                    type="text" 
+                    name="q" 
+                    value="<?= htmlspecialchars($query) ?>"
+                    placeholder="Rechercher par titre ou réalisateur..." 
+                    class="w-full px-6 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+            </div>
+            <button type="submit" class="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                <i class="fas fa-search mr-2"></i> Rechercher
+            </button>
+        </form>
     </div>
-
-    <?php if (empty($movies)): ?>
-        <div class="bg-white rounded-lg shadow-md p-6 text-center">
-            <i class="fas fa-search text-gray-300 text-5xl mb-4"></i>
-            <h2 class="text-2xl font-semibold mb-2">No results found</h2>
-            <p class="text-gray-600 mb-6">We couldn't find any movies matching your search term.</p>
-            <a href="<?= SITE_URL ?>" class="inline-block bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 rounded-lg font-semibold">
-                Browse All Movies
-            </a>
+    
+    <?php if (empty($query)): ?>
+        <div class="bg-gray-100 p-8 rounded-lg text-center">
+            <i class="fas fa-search text-5xl text-gray-400 mb-4"></i>
+            <h2 class="text-2xl font-semibold text-gray-700 mb-2">Commencez votre recherche</h2>
+            <p class="text-gray-600">Entrez un titre de film ou un nom de réalisateur pour trouver des films.</p>
+        </div>
+    <?php elseif (empty($movies)): ?>
+        <div class="bg-gray-100 p-8 rounded-lg text-center">
+            <i class="fas fa-film text-5xl text-gray-400 mb-4"></i>
+            <h2 class="text-2xl font-semibold text-gray-700 mb-2">Aucun résultat trouvé</h2>
+            <p class="text-gray-600">Nous n'avons trouvé aucun film correspondant à "<?= htmlspecialchars($query) ?>".</p>
         </div>
     <?php else: ?>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
             <?php foreach ($movies as $movie): ?>
-                <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                    <a href="<?= SITE_URL ?>/movie.php?id=<?= $movie['id'] ?>">
-                        <img src="<?= SITE_URL ?>/uploads/posters/<?= $movie['poster_path'] ?? 'default.jpg' ?>" 
-                             alt="<?= sanitizeOutput($movie['title']) ?>"
-                             class="w-full h-64 object-cover">
-                    </a>
+                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                    <div class="relative">
+                        <img src="<?= $movie['poster_path'] ?>" alt="<?= htmlspecialchars($movie['title']) ?>" class="w-full h-64 object-cover">
+                        <div class="absolute top-2 right-2 bg-blue-600 text-white text-xs px-2 py-1 rounded">
+                            <?= htmlspecialchars($movie['category']) ?>
+                        </div>
+                    </div>
                     <div class="p-4">
-                        <h3 class="text-lg font-semibold mb-2">
-                            <a href="<?= SITE_URL ?>/movie.php?id=<?= $movie['id'] ?>" class="hover:text-blue-600">
-                                <?= sanitizeOutput($movie['title']) ?>
-                            </a>
-                        </h3>
-                        <p class="text-gray-600 mb-2">
-                            Directed by 
-                            <?= sanitizeOutput($movie['director_name']) ?>
-                        </p>
-                        <p class="text-gray-600 mb-2">
-                            Category: <?= sanitizeOutput($movie['category_name']) ?>
-                        </p>
-                        <div class="flex justify-between items-center">
-                            <span class="text-xl font-bold">$<?= number_format($movie['price'], 2) ?></span>
+                        <h3 class="text-xl font-semibold mb-2"><?= htmlspecialchars($movie['title']) ?></h3>
+                        <p class="text-gray-600 mb-2">Réalisé par <a href="<?= SITE_URL ?>/director.php?id=<?= $movie['director_id'] ?>" class="text-blue-600 hover:underline"><?= htmlspecialchars($movie['director_name']) ?></a></p>
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="text-xl font-bold text-blue-600"><?= number_format($movie['price'], 2) ?> €</span>
                             <?php if (isLoggedIn()): ?>
-                                <form action="<?= SITE_URL ?>/cart.php" method="POST" class="inline">
-                                    <input type="hidden" name="csrf_token" value="<?= generateCSRFToken() ?>">
-                                    <input type="hidden" name="action" value="add">
-                                    <input type="hidden" name="movie_id" value="<?= $movie['id'] ?>">
-                                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                                        Add to Cart
-                                    </button>
-                                </form>
+                                <a href="<?= SITE_URL ?>/add-to-cart.php?id=<?= $movie['id'] ?>" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors">
+                                    <i class="fas fa-shopping-cart mr-1"></i> Ajouter
+                                </a>
                             <?php else: ?>
-                                <a href="<?= SITE_URL ?>/login.php" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                                    Login to Purchase
+                                <a href="<?= SITE_URL ?>/login.php" class="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300 transition-colors">
+                                    <i class="fas fa-lock mr-1"></i> Connectez-vous
                                 </a>
                             <?php endif; ?>
                         </div>

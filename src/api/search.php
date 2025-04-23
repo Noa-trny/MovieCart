@@ -2,30 +2,24 @@
 require_once __DIR__ . '/../../src/config/config.php';
 require_once __DIR__ . '/../../src/config/database.php';
 
-// Assurer que la réponse est en JSON
 header('Content-Type: application/json');
 
-// Fonction pour envoyer une réponse d'erreur
 function sendError($message, $code = 400) {
     http_response_code($code);
     echo json_encode(['error' => $message]);
     exit;
 }
 
-// Récupérer et valider les paramètres
 $query = isset($_GET['q']) ? trim($_GET['q']) : '';
 
 if (empty($query)) {
     sendError('Terme de recherche requis');
 }
 
-// Limiter la recherche à un certain nombre de résultats
 $limit = isset($_GET['limit']) ? filter_var($_GET['limit'], FILTER_VALIDATE_INT, ['options' => ['default' => 20, 'min_range' => 1, 'max_range' => 50]]) : 20;
 
-// Effectuer la recherche
 $pdo = getDbConnection();
 
-// Préparation des termes de recherche pour la requête SQL
 $searchTerm = '%' . $query . '%';
 
 $stmt = $pdo->prepare("
@@ -65,14 +59,12 @@ $stmt->execute([
 
 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Organiser les résultats pour éviter les doublons
 $movies = [];
 $actorsByMovie = [];
 
 foreach ($results as $row) {
     $movieId = $row['id'];
     
-    // Si ce film n'a pas encore été ajouté à notre tableau de résultats
     if (!isset($movies[$movieId])) {
         $movies[$movieId] = [
             'id' => $movieId,
@@ -95,7 +87,6 @@ foreach ($results as $row) {
         $actorsByMovie[$movieId] = [];
     }
     
-    // Ajouter l'acteur au film s'il n'est pas déjà présent
     if ($row['actor_id'] && !in_array($row['actor_id'], array_column($actorsByMovie[$movieId], 'id'))) {
         $actorsByMovie[$movieId][] = [
             'id' => $row['actor_id'],
@@ -104,15 +95,12 @@ foreach ($results as $row) {
     }
 }
 
-// Ajouter les acteurs à chaque film
 foreach ($movies as $movieId => &$movie) {
     $movie['actors'] = $actorsByMovie[$movieId];
 }
 
-// Convertir l'array associatif en tableau simple pour le JSON
 $moviesArray = array_values($movies);
 
-// Renvoyer les résultats
 echo json_encode([
     'query' => $query,
     'count' => count($moviesArray),

@@ -3,7 +3,17 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-require_once __DIR__ . '/wamp.php';
+define('SITE_NAME', 'MovieCart');
+define('SITE_URL', 'http://localhost/MovieCart/public/pages');
+define('ASSETS_URL', 'http://localhost/MovieCart/public/assets');
+define('PUBLIC_PATH', __DIR__ . '/../public');
+
+define('DB_HOST', 'localhost');
+define('DB_USER', 'root');
+define('DB_PASS', '');
+define('DB_NAME', 'moviecart');
+
+define('CART_SESSION_KEY', 'cart_items');
 
 function redirect($path) {
     header('Location: ' . SITE_URL . $path);
@@ -11,12 +21,15 @@ function redirect($path) {
 }
 
 function isLoggedIn() {
-    return isset($_SESSION['user_id']);
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
+    return isset($_SESSION['user_id']) && !empty($_SESSION['user_id']);
 }
 
 function requireLogin() {
     if (!isLoggedIn()) {
-        $_SESSION['flash_message'] = 'Please log in to access this page';
+        $_SESSION['flash_message'] = 'Veuillez vous connecter pour accéder à cette page';
         $_SESSION['flash_type'] = 'error';
         redirect('/login.php');
     }
@@ -35,4 +48,5 @@ function generateCSRFToken() {
 
 function validateCSRFToken($token) {
     return isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token);
-} 
+}
+?> 

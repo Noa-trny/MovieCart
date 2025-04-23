@@ -1,0 +1,445 @@
+.profile-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.profile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.profile-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #1f2937;
+}
+
+.profile-header-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.profile-email {
+    color: #4b5563;
+}
+
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 25px;
+    grid-template-areas:
+        "info"
+        "password"
+        "purchases"
+        "library";
+}
+
+.profile-grid .profile-card:nth-child(1) {
+    grid-area: info;
+    padding: 0.5rem;
+}
+
+.profile-grid .profile-card:nth-child(2) {
+    grid-area: password;
+}
+
+.profile-grid .profile-card:nth-child(3) {
+    grid-area: purchases;
+}
+
+.profile-grid .profile-card:nth-child(4) {
+    grid-area: library;
+}
+
+.profile-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.profile-card-header {
+    background-color: #f3f4f6;
+    padding: 15px 20px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.profile-card-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #1f2937;
+}
+
+.profile-card-body {
+    padding: 20px;
+}
+
+.form-group {
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid #f3f4f6;
+    padding-bottom: 1rem;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.form-group:last-child {
+    margin-bottom: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.form-label {
+    display: block;
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    margin-bottom: 5px;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 1px #3b82f6;
+}
+
+.form-message {
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    font-size: 0.9rem;
+}
+
+.form-message-success {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.form-message-error {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+.purchased-movies {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-height: 350px;
+    overflow-y: auto;
+    padding-right: 10px;
+    position: relative;
+}
+
+.purchased-movies::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 10px;
+    height: 20px;
+    background: linear-gradient(to bottom, transparent, white);
+    pointer-events: none;
+    opacity: 0.8;
+    display: block;
+}
+
+.purchased-movies::-webkit-scrollbar {
+    width: 6px;
+}
+
+.purchased-movies::-webkit-scrollbar-track {
+    background-color: #f3f4f6;
+    border-radius: 8px;
+}
+
+.purchased-movies::-webkit-scrollbar-thumb {
+    background-color: #9ca3af;
+    border-radius: 8px;
+}
+
+.purchased-movies::-webkit-scrollbar-thumb:hover {
+    background-color: #6b7280;
+}
+
+.movie-item {
+    display: flex;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.movie-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.movie-item-poster {
+    width: 80px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 4px;
+    margin-right: 15px;
+}
+
+.movie-item-info {
+    flex: 1;
+}
+
+.movie-item-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+}
+
+.movie-item-title a {
+    color: #1f2937;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.movie-item-title a:hover {
+    color: #3b82f6;
+}
+
+.movie-item-director {
+    color: #6b7280;
+    font-size: 0.9rem;
+    margin-bottom: 5px;
+}
+
+.movie-item-purchase-date {
+    color: #10b981;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.purchases-loading {
+    text-align: center;
+    padding: 20px;
+    color: #6b7280;
+}
+
+.purchases-empty {
+    text-align: center;
+    padding: 30px 0;
+}
+
+.purchases-empty-icon {
+    font-size: 2.5rem;
+    color: #9ca3af;
+    margin-bottom: 10px;
+}
+
+.purchases-empty-text {
+    color: #6b7280;
+}
+
+@media (min-width: 768px) {
+    .profile-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-areas:
+            "info password"
+            "purchases purchases"
+            "library library";
+    }
+}
+
+@media (min-width: 992px) {
+    .profile-grid {
+        grid-template-columns: repeat(2, 1fr);
+        grid-template-areas:
+            "info password"
+            "purchases library";
+    }
+    
+    .library-card {
+        max-width: none !important;
+        width: 100% !important;
+        margin: 0 !important;
+    }
+    
+    .purchases-card {
+        max-width: none;
+    }
+    
+    .profile-card-body {
+        height: calc(100% - 52px);
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .purchased-movies, .library-movies {
+        flex: 1;
+        max-height: none;
+    }
+}
+
+.library-card {
+    width: 360px !important;
+    margin: 0 auto !important;
+}
+
+.library-movies {
+    display: grid !important;
+    grid-template-columns: repeat(3, 1fr) !important;
+    grid-gap: 10px !important;
+    max-height: 300px !important;
+    overflow-y: auto !important;
+    padding: 10px !important;
+}
+
+.library-movie-item {
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+    border-radius: 4px !important;
+    overflow: hidden !important;
+    transition: transform 0.2s !important;
+}
+
+.library-movie-item:hover {
+    transform: scale(1.05) !important;
+}
+
+.library-poster-link {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+}
+
+.library-movie-item .movie-item-poster {
+    width: 100% !important;
+    height: 120px !important;
+    object-fit: cover !important;
+}
+
+.purchases-card .profile-card-header, 
+.library-card .profile-card-header {
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.profile-card-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.library-card .profile-card-body {
+    padding: 15px;
+    background-color: #f9fafb;
+}
+
+.profile-card-body .form-group div {
+    font-size: 1.05rem;
+    color: #1f2937;
+    font-weight: 500;
+    padding: 0.25rem 0;
+}
+
+.profile-card-body .form-group:nth-child(1) div {
+    font-weight: 500;
+    color: #3b82f6;
+}
+
+.profile-card-body .form-group:nth-child(2) div {
+    font-weight: 600;
+    color: #1f2937;
+    font-size: 1.2rem;
+}
+
+.profile-card-body .form-group:last-child div {
+    font-size: 0.95rem;
+    color: #10b981;
+    font-style: italic;
+}
+
+.profile-grid .profile-card:nth-child(1) {
+    grid-area: info;
+    padding: 0.5rem;
+}
+
+.profile-grid .profile-card:nth-child(1) .profile-card-header {
+    background-color: #f8fafc;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+@media (max-width: 768px) {
+    .library-card {
+        max-width: 100%;
+    }
+} 
+
+.info-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.info-card:hover {
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.info-card .profile-card-header {
+    background-color: #f8fafc;
+    border-bottom: 2px solid #e5e7eb;
+    padding: 1rem 1.5rem;
+}
+
+.info-card .profile-card-body {
+    padding: 1.8rem;
+}
+
+.info-card .form-group {
+    margin-bottom: 1.8rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #f0f2f5;
+}
+
+.info-card .form-group:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.info-card .form-label {
+    margin-bottom: 0.8rem;
+    font-size: 0.95rem;
+}
+
+.info-card .form-group div {
+    font-size: 1.1rem;
+    padding: 0.5rem 0;
+    line-height: 1.5;
+}
+
+.profile-grid .profile-card.library-card {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+}
+
+@media (min-width: 992px) {
+    .library-card {
+        max-width: none !important;
+        width: 100% !important;
+        margin: 0 !important;
+    }
+}

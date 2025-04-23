@@ -1,88 +1,68 @@
 <?php
-require_once __DIR__ . '/../../src/config/config.php';
-require_once __DIR__ . '/../../src/config/database.php';
+$pageTitle = 'Films d\'action';
+$category = 'Action';
 
-// Set the category slug
-$categorySlug = 'action';
+require_once __DIR__ . '/../../config/config.php';
+require_once __DIR__ . '/../../src/utils/functions.php';
 
-// Fetch category information
-$category = fetchOne(
-    "SELECT * FROM categories WHERE slug = ?", 
-    [$categorySlug]
-);
-
-// If category doesn't exist, redirect to homepage
-if (!$category) {
-    redirect('/');
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
 
-// Fetch movies in this category
-$movies = fetchAll(
-    "SELECT m.*, d.name as director_name 
-     FROM movies m 
-     LEFT JOIN directors d ON m.director_id = d.id 
-     WHERE m.category_id = ? 
-     ORDER BY m.created_at DESC",
-    [$category['id']]
-);
+$movies = getMoviesByCategory($category);
 
-$pageTitle = $category['name'] . ' Movies';
 ob_start();
 ?>
 
-<div class="mb-8">
-    <h1 class="text-3xl font-bold mb-2"><?= sanitizeOutput($category['name']) ?> Movies</h1>
-    <p class="text-gray-600"><?= sanitizeOutput($category['description']) ?></p>
-</div>
-
-<?php if (empty($movies)): ?>
-    <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6">
-        <p>No movies found in this category.</p>
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <div class="mb-8">
+        <div class="bg-red-600 text-white rounded-lg p-8 flex items-center">
+            <div class="mr-6 text-5xl">
+                <i class="fas fa-fire"></i>
+            </div>
+            <div>
+                <h1 class="text-3xl font-bold mb-2">Films d'action</h1>
+                <p class="text-xl opacity-90">Découvrez notre sélection de films d'action et d'aventure remplis d'adrénaline.</p>
+            </div>
+        </div>
     </div>
-<?php else: ?>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        <?php foreach ($movies as $movie): ?>
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                <a href="<?= SITE_URL ?>/movie.php?id=<?= $movie['id'] ?>">
-                    <img src="<?= SITE_URL ?>/uploads/posters/<?= $movie['poster_path'] ?? 'default.jpg' ?>" 
-                         alt="<?= sanitizeOutput($movie['title']) ?>"
-                         class="w-full h-64 object-cover">
-                </a>
-                <div class="p-4">
-                    <h3 class="text-lg font-semibold mb-2">
-                        <a href="<?= SITE_URL ?>/movie.php?id=<?= $movie['id'] ?>" class="hover:text-blue-600">
-                            <?= sanitizeOutput($movie['title']) ?>
+    
+    <?php if (empty($movies)): ?>
+        <div class="bg-gray-100 p-8 rounded-lg text-center">
+            <i class="fas fa-film text-5xl text-gray-400 mb-4"></i>
+            <h2 class="text-2xl font-semibold text-gray-700 mb-2">Aucun film disponible</h2>
+            <p class="text-gray-600">Nous travaillons à étoffer notre catalogue de films d'action.</p>
+        </div>
+    <?php else: ?>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+            <?php foreach ($movies as $movie): ?>
+                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                    <a href="<?= SITE_URL ?>/movie.php?id=<?= $movie['id'] ?>">
+                        <img src="<?= $movie['image_url'] ?>" alt="<?= htmlspecialchars($movie['title']) ?>" class="w-full h-64 object-cover">
+                    </a>
+                    <div class="p-4">
+                        <a href="<?= SITE_URL ?>/movie.php?id=<?= $movie['id'] ?>">
+                            <h3 class="text-xl font-semibold mb-2"><?= htmlspecialchars($movie['title']) ?></h3>
                         </a>
-                    </h3>
-                    <p class="text-gray-600 mb-2">
-                        Directed by 
-                        <?= sanitizeOutput($movie['director_name']) ?>
-                    </p>
-                    <p class="text-gray-600 mb-2">
-                        <?= $movie['release_year'] ?> • <?= $movie['duration'] ?> min
-                    </p>
-                    <div class="flex justify-between items-center">
-                        <span class="text-xl font-bold">$<?= number_format($movie['price'], 2) ?></span>
-                        <?php if (isLoggedIn()): ?>
-                            <form action="<?= SITE_URL ?>/cart.php" method="POST" class="inline">
-                                <input type="hidden" name="csrf_token" value="<?= generateCSRFToken() ?>">
-                                <input type="hidden" name="action" value="add">
-                                <input type="hidden" name="movie_id" value="<?= $movie['id'] ?>">
-                                <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                                    Add to Cart
-                                </button>
-                            </form>
-                        <?php else: ?>
-                            <a href="<?= SITE_URL ?>/login.php" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                                Login to Purchase
-                            </a>
-                        <?php endif; ?>
+                        <p class="text-gray-600 mb-2">Réalisé par <a href="<?= SITE_URL ?>/director.php?id=<?= $movie['director_id'] ?>" class="text-blue-600 hover:underline"><?= htmlspecialchars($movie['director_name']) ?></a></p>
+                        <div class="flex justify-between items-center mt-4">
+                            <span class="text-xl font-bold text-blue-600"><?= number_format($movie['price'], 2) ?> €</span>
+                            <?php if (isLoggedIn()): ?>
+                                <a href="<?= SITE_URL ?>/add-to-cart.php?id=<?= $movie['id'] ?>" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors">
+                                    <i class="fas fa-shopping-cart mr-1"></i> Ajouter
+                                </a>
+                            <?php else: ?>
+                                <a href="<?= SITE_URL ?>/login.php" class="bg-gray-200 text-gray-700 px-4 py-2 rounded hover:bg-gray-300 transition-colors">
+                                    <i class="fas fa-lock mr-1"></i> Connectez-vous
+                                </a>
+                            <?php endif; ?>
+                        </div>
                     </div>
                 </div>
-            </div>
-        <?php endforeach; ?>
-    </div>
-<?php endif; ?>
+            <?php endforeach; ?>
+        </div>
+    <?php endif; ?>
+</div>
 
 <?php
 $content = ob_get_clean();

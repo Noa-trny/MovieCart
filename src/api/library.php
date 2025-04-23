@@ -3,17 +3,14 @@ require_once __DIR__ . '/../../src/config/config.php';
 require_once __DIR__ . '/../../src/config/database.php';
 require_once __DIR__ . '/../models/Library.php';
 
-// Assurer que la réponse est en JSON
 header('Content-Type: application/json');
 
-// Fonction pour envoyer une réponse d'erreur
 function sendError($message, $code = 400) {
     http_response_code($code);
     echo json_encode(['error' => $message]);
     exit;
 }
 
-// Vérifier l'authentification
 if (!isLoggedIn()) {
     sendError('Authentification requise', 401);
 }
@@ -21,10 +18,8 @@ if (!isLoggedIn()) {
 $userId = $_SESSION['user_id'];
 $action = $_GET['action'] ?? 'get_library';
 
-// Créer l'instance de la classe Library
 $library = new Library($userId);
 
-// Traiter l'action demandée
 switch ($action) {
     case 'get_library':
         try {

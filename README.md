@@ -1,175 +1,125 @@
-# MovieCart - Système de e-commerce pour films
+# 🎬 MovieCart
 
-## À propos
-MovieCart est une plateforme web complète permettant la vente en ligne de films. Le site comprend un catalogue de films, un système d'authentification, un panier d'achat, et un système de paiement. Il est développé avec PHP, MySQL et utilise TailwindCSS pour le design.
+MovieCart est une plateforme en ligne permettant aux utilisateurs de découvrir, acheter et collectionner des films.
 
-## Fonctionnalités
-- **Catalogue de films**: Parcourir les films par catégorie (Action, Drame, etc.)
-- **Recherche**: Trouver des films par titre ou réalisateur
-- **Page détaillée**: Vue détaillée pour chaque film avec informations, acteurs et réalisateur
-- **Authentification**: Système complet d'inscription et de connexion
-- **Panier d'achat**: Ajouter, supprimer et gérer les articles du panier
-- **Paiement**: Processus de paiement simple
-- **Profil utilisateur**: Gestion de compte et historique des achats
+## 📋 Description
 
-## Configuration requise
+MovieCart offre une expérience complète pour les amateurs de cinéma. La plateforme permet de parcourir un vaste catalogue de films, de les filtrer par catégorie, réalisateur ou titre, et de les ajouter à votre collection personnelle.
+
+## ✨ Fonctionnalités
+
+- 🔍 Recherche avancée de films (par titre, réalisateur, acteur)
+- 🔖 Navigation par catégories
+- 👤 Profils réalisateurs avec filmographie complète
+- 🛒 Système de panier d'achat intuitif
+- 👤 Gestion de compte utilisateur
+- 📚 Collection personnelle de films
+- 👑 Interface d'administration
+- 📱 Design responsive pour tous les appareils
+
+## 🔧 Prérequis
+
 - PHP 7.4 ou supérieur
 - MySQL 5.7 ou supérieur
 - Serveur web (Apache, Nginx)
-- WampServer (pour l'installation locale)
 
-## Installation
+## 🚀 Installation
 
-### 1. Configuration de WampServer
-1. Téléchargez et installez [WampServer](https://www.wampserver.com/)
-2. Démarrez WampServer
-3. Vérifiez que les modules Apache suivants sont activés:
-   - mod_rewrite
-   - mod_headers
-
-### 2. Configuration du projet
-1. Clonez ou téléchargez ce projet dans le répertoire `www` de WampServer:
-   ```
-   C:\wamp64\www\MovieCart\
+1. **Clonez le dépôt**
+   ```bash
+   git clone https://github.com/noa-trny/moviecart.git
+   cd moviecart
    ```
 
-2. Assurez-vous que la structure de dossiers suivante existe:
-   ```
-   C:\wamp64\www\MovieCart\
-   ├── public\
-   │   ├── index.php
-   │   ├── login.php
-   │   ├── register.php
-   │   ├── logout.php
-   │   ├── movie.php
-   │   ├── search.php
-   │   ├── cart.php
-   │   ├── profile.php
-   │   ├── categories\
-   │   │   ├── action.php
-   │   │   └── drama.php
-   ├── src\
-   │   ├── config\
-   │   │   ├── config.php
-   │   │   ├── database.php
-   │   │   └── wamp.php
-   │   └── views\
-   │       └── layouts\
-   │           └── main.php
-   ├── database\
-   │   └── schema.sql
-   └── uploads\
-       └── posters\
+2. **Configuration du serveur web**
+   - Configurez votre serveur web pour pointer vers le dossier `public/pages/` comme racine du site
+   - Assurez-vous que le module de réécriture (mod_rewrite pour Apache) est activé
+
+3. **Base de données**
+   ```bash
+   mysql -u votreUtilisateur -p < database/schema.sql
    ```
 
-3. Créez ces dossiers s'ils n'existent pas:
-   ```
-   mkdir C:\wamp64\www\MovieCart\src\config
-   mkdir C:\wamp64\www\MovieCart\src\views\layouts
-   mkdir C:\wamp64\www\MovieCart\database
-   mkdir C:\wamp64\www\MovieCart\uploads\posters
-   ```
+4. **Configuration**
+   - Modifiez le fichier `src/config/wamp.php` avec vos informations de connexion à la base de données
+     ```php
+     define('DB_HOST', 'localhost');
+     define('DB_USER', 'votre_utilisateur');
+     define('DB_PASS', 'votre_mot_de_passe');
+     define('DB_NAME', 'moviecart');
+     define('SITE_URL', 'http://localhost/MovieCart/public/pages');
+     ```
 
-### 3. Configuration de la base de données
-1. Ouvrez phpMyAdmin (http://localhost/phpmyadmin)
-2. Créez une nouvelle base de données nommée `moviecart`
-3. Importez le fichier `database/schema.sql` dans cette base de données
+5. **Accès à l'application**
+   - Accédez à l'application via l'URL configurée (par défaut: http://localhost/MovieCart/public/pages)
 
-### 4. Configuration du site
-Le fichier `src/config/wamp.php` contient les paramètres de configuration:
-- Connexion à la base de données
-- URL du site
-- Chemins des dossiers d'upload
-- Configuration des erreurs
+## 📁 Structure du projet
 
-Par défaut, le site est configuré pour utiliser:
-- Base de données: `moviecart`
-- Utilisateur: `root`
-- Mot de passe: `` (vide)
-- URL du site: `http://localhost/MovieCart/public`
+```
+MovieCart/
+├── config/               # Configuration générale de l'application
+│   └── config.php        # Configuration principale
+├── database/             # Scripts de base de données
+│   └── schema.sql        # Schéma de base de données
+├── public/               # Fichiers accessibles publiquement
+│   ├── assets/           # Ressources statiques
+│   │   ├── css/          # Fichiers CSS
+│   │   │   ├── components/ # Composants CSS réutilisables
+│   │   │   │   └── dropdown.css # Styles des menus déroulants
+│   │   │   ├── common.css # Styles communs à toutes les pages
+│   │   │   ├── profile.css # Styles de la page de profil
+│   │   │   └── ... (autres styles spécifiques)
+│   │   └── images/       # Images et icônes
+│   └── pages/            # Pages de l'application
+│       ├── categories/   # Pages de catégories de films
+│       │   ├── action.php # Films d'action
+│       │   ├── adventure.php # Films d'aventure
+│       │   └── ... (autres catégories)
+│       ├── index.php     # Page d'accueil
+│       ├── movie.php     # Page de détail d'un film
+│       ├── profile.php   # Page de profil utilisateur
+│       ├── cart.php      # Page du panier
+│       ├── checkout.php  # Page de paiement
+│       ├── login.php     # Page de connexion
+│       └── ... (autres pages)
+└── src/                  # Code source de l'application
+    ├── api/              # Définitions d'API (non utilisées actuellement)
+    ├── config/           # Configuration interne
+    │   ├── config.php    # Variables de configuration
+    │   ├── database.php  # Configuration de la base de données
+    │   └── wamp.php      # Configuration spécifique pour WAMP
+    ├── models/           # Modèles de données
+    │   └── Library.php   # Gestion de la bibliothèque de films
+    ├── utils/            # Fonctions utilitaires
+    │   └── functions.php # Fonctions communes réutilisables
+    └── views/            # Templates et vues
+        └── layouts/      # Layouts principaux
+            └── main.php  # Layout principal de l'application
+```
 
-### 5. Permissions
-Assurez-vous que le dossier `uploads/posters` a les permissions d'écriture:
-- Clic droit sur le dossier → Propriétés → Sécurité
-- Ajoutez l'utilisateur `IUSR` et `IIS_IUSRS` avec les droits de lecture et d'écriture
+## 🔑 Comptes par défaut
 
-### 6. Accès au site
-1. Ouvrez votre navigateur
-2. Accédez à http://localhost/MovieCart/public
+### Administrateur
+- Email: admin@moviecart.com
+- Mot de passe: admin123
 
-## Utilisation
-### Compte utilisateur
-Un compte administrateur par défaut est disponible:
-- Email: `admin@example.com`
-- Mot de passe: `password123`
+### Utilisateur test
+- Email: user@example.com
+- Mot de passe: password123
 
-### Navigation sur le site
-- **Page d'accueil**: Affiche les films récents et les catégories
-- **Catégories**: Parcourir les films par genre
-- **Recherche**: Trouver des films par titre ou réalisateur
-- **Détail du film**: Cliquez sur un film pour voir ses détails complets
-- **Panier**: Ajoutez des films à votre panier et passez à la caisse
-- **Profil**: Gérez votre compte et consultez vos achats
+## 🛠️ Technologies utilisées
 
-## Développement
+- 🐘 PHP pour le backend
+- 🗄️ MySQL pour la base de données
+- 🎨 HTML5/CSS3 pour la structure et le style
+- 📊 JavaScript pour les interactions côté client
+- 🅰️ Font Awesome pour les icônes
 
-### Structure du code
-- **public**: Fichiers accessibles par le navigateur
-- **src/config**: Fichiers de configuration
-- **src/views**: Templates et layouts
-- **database**: Schéma de la base de données
-- **uploads**: Fichiers téléchargés (affiches de films)
+## 👥 Auteurs
 
-### Base de données
-Le schéma de la base de données est organisé comme suit:
-- `users`: Utilisateurs du site
-- `categories`: Catégories de films
-- `directors`: Réalisateurs
-- `actors`: Acteurs
-- `movies`: Films
-- `movie_actors`: Relation entre films et acteurs
-- `orders`: Commandes
-- `order_items`: Articles des commandes
+- Noa Tournoy - Développeur
+- Noa Panfil - Développeur
 
-## Fonctionnalités techniques
+## 📜 Licence
 
-### Authentification
-- Hachage sécurisé des mots de passe avec `password_hash`
-- Protection CSRF sur tous les formulaires
-- Validation des entrées utilisateur
-
-### Sécurité
-- Préparation des requêtes SQL pour prévenir les injections
-- Échappement des sorties HTML pour prévenir le XSS
-- Validation et nettoyage des entrées utilisateur
-
-### Responsive Design
-Le site utilise TailwindCSS pour un design adaptatif qui fonctionne sur:
-- Ordinateurs de bureau
-- Tablettes
-- Smartphones
-
-## Dépannage
-
-### Problèmes courants
-1. **Erreur "Failed to open stream"**
-   - Vérifiez que tous les dossiers existent dans la structure attendue
-   
-2. **Erreur "Call to undefined function"**
-   - Vérifiez que toutes les extensions PHP nécessaires sont activées dans WampServer
-
-3. **Erreur de base de données**
-   - Vérifiez que la base de données `moviecart` existe
-   - Vérifiez que le schéma a été importé correctement
-   - Vérifiez les identifiants de connexion dans `src/config/wamp.php`
-
-4. **Images qui ne s'affichent pas**
-   - Vérifiez les permissions du dossier `uploads/posters`
-   - Vérifiez que les chemins sont correctement définis dans `src/config/wamp.php`
-
-### Logs
-En cas d'erreur, consultez les logs Apache:
-- `C:\wamp64\logs\apache_error.log`
-
-## Crédits
-Ce projet a été développé en tant que site e-commerce de démonstration pour Internet Movies DataBase & co. 
+Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails. 
